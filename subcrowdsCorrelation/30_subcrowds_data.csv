@@ -1,0 +1,57 @@
+Subcrowd ,recall,workers,lines_to_inspect,precision,answers,answer_per_worker,,,
+ALL WORKERS,0.6375,497,43,0.791666667,2580,5.191146881,,,
+"100 score, difficulty 2",0.602083333,93,80,0.497916667,235,2.52688172,,,
+score100_80diffAny U score60_diff123_averages,0.695833333,299,55,0.833333333,1505,5.033444816,,,
+score100_diff543 U score80_diff543 U score60_diff123_averages,0.525,436,44,0.666666667,1713,3.928899083,,,
+score100_diff1234 U score80_diff123 U score60_diff123_averages,0.6125,418,42,0.8125,1868,4.468899522,,,
+score100_diff1234 U score80_diff1234 U score60_diff1234_averages,0.508333333,456,41,0.6875,2204,4.833333333,,,
+score100_diffAny U score80_diff123 U score60_diff123_averages,0.6375,431,42,0.875,2014,4.672853828,,,
+score100_diffAny U score80_diff123 U score60_diff1234_averages,0.570833333,454,44,0.75,2181,4.803964758,,,
+score100_diffAny U score80_diff1234 U score60_diff123_averages,0.595833333,446,41,0.8125,2183,4.894618834,,,
+score100_diffAny U score80_diff1234 U score60_diff1234_averages,0.570833333,469,42,0.770833333,2350,5.010660981,,,
+Removed students_45,0.61,454,43,0.81,2279,5.019823789,,,
+Removed students_345,0.61,406,45,0.77,2045,5.036945813,,,
+Removed Undergrad_diff45 and Grad_diff5,0.64,463,43,0.81,2357,5.090712743,,,
+non_students_diff 12,0.61,184,67,0.61,618,3.358695652,,,
+non_students_diff1,0.56,103,67,0.6,280,2.718446602,,,
+non_students_diff2,0.54,151,75,0.52,338,2.238410596,,,
+Professional_Developer_diff2,0.56,84,75,0.43,188,2.238095238,,,
+students_3,0.59,105,71,0.42,234,2.228571429,,,
+ANSWER_DURATION_MIN_60_30_averages,0.59,488,41,0.78,2395,4.907786885,,,
+CONDITIONAL_CLAUSE_ABOVE_3LINES_averages,0.760416667,494,34,0.770833333,2280,4.615384615,,,
+CONFIDENCE_DIFFICULTY_UP_3PERCENT_averages,0.560416667,412,42,0.708333333,1749,4.245145631,,,
+EXPLANATION_2_3_4_QT_57_2383_averages,0.658333333,412,57,0.697916667,1879,4.560679612,,,
+WORKER_SCORE_100_80_NON_STUDENT_averages,0.679166667,231,58,0.783333333,1375,5.952380952,,,
+WORKER_SCORE_100_NON_STUDENT_averages,0.654166667,133,51,0.9375,836,6.285714286,,,
+100_SCORE_WORKERS,0.570833333,351,42,0.75,1894,5.396011396,,,
+100_80_SCORE_WORKERS,0.654166667,194,51,0.9375,1121,5.778350515,,,
+Professional Programmers and Graduates,0.58125,232,46,0.654166667,1260,5.431034483,,,
+Professional Programmers and Hobbyists,0.7,280,55,0.75,1578,5.635714286,,,
+Professional Programmers and Undergraduates,0.539583333,287,37,0.708333333,1513,5.271777003,,,
+Non-students,0.7625,316,56,0.8125,1773,5.610759494,,,"cor.test(sample$precision, sample$lines_to_inspect, method=""kendall"")  # SIGNIFICANT !!"
+,,,,,,,,,"#z = -2.3342, p-value = 0.01959 tau=-0.3099194 "
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$recall, sample$lines_to_inspect, method=""kendall"")  #NOT SIGNIFICANT"
+,,,,,,,,,"#z = 0.8978, p-value = 0.3693"
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$answer_per_worker, sample$lines_to_inspect, method=""kendall"") #NOT SIGNIFICANT"
+,,,,,,,,,"#z = -1.0037, p-value = 0.3155  "
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$workers, sample$lines_to_inspect, method=""kendall"") #SIGNIFICANT"
+,,,,,,,,,"#z = -4.6617, p-value = 3.137e-06 tau=-0.614086  "
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$answers, sample$lines_to_inspect, method=""kendall"") #SIGNIFICANT"
+,,,,,,,,,"#z = -4.481, p-value = 7.43e-06 tau=-0.5891084"
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$precision, sample$answers, method=""kendall"")  # SIGNIFICANT"
+,,,,,,,,,"#z = 2.7704, p-value = 0.005599 tau=0.3604895 "
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$precision, sample$workers, method=""kendall"")  # SIGNIFICANT"
+,,,,,,,,,"#z = 2.1633, p-value = 0.03051 tau=0.2820635  "
+,,,,,,,,,
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$recall, sample$answers, method=""kendall"")  # NOT SIGNIFICANT"
+,,,,,,,,,"#z = 0.7686, p-value = 0.4422"
+,,,,,,,,,
+,,,,,,,,,"cor.test(sample$recall, sample$workers, method=""kendall"")  # NOT SIGNIFICANT"
+,,,,,,,,,"#z = 0.3755, p-value = 0.7073"
