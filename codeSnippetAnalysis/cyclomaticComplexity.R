@@ -17,16 +17,13 @@ dir<- paste(baseDir, "dataWrangling//dataframeUtil.R",sep="");
 source(dir);
 dirData <-paste(baseDir, "photinus-analytics//codeSnippetAnalysis//data//",sep="");
 
-fileList <- list.files(dirData, full.names = TRUE)
+fileList <- list.files(dirData, full.names = TRUE);
 
-dataframe <- readLines(fileList[1])
-columns <- which(dataframe[]=="")
-dataframe<-dataframe[-columns]
+dataframe <- readLines(fileList[1]);
 
-
-
+print("Cyclomatic complexity");
 for(fileName in fileList){
-  computeFile(fileName);
+  cat(fileName,": ",computeFile(fileName));
 }
 
 ##Process each file
@@ -39,13 +36,15 @@ computeFile <- function(fileName){
   ##TODO remove tabs
   
   ##Count complexity factors
-  factors <- c("if","else","case","default","return","for","while","do-while","break","continue","&&","\\|", "\\?", ":","catch", "finally", "throw", "throws");
+  factors <- c("if","else","case","default","return","for","while","do-while","break","continue","&&","\\|\\|", "\\?", ":","catch", "finally", "throw", "throws");
   complexity = 1;
   for(line in dataframe){
     line <- sapply(line, tolower);
     print(line);
     countVector <- str_count(line,factors);
+    print(sum(countVector));
     complexity = complexity + sum(countVector);
   }
+  return (complexity);
 }
 
