@@ -43,34 +43,68 @@ computeRecall<- function(df){
   return((df$TP)/(df$TP+df$FN));
 }
 
+## Computes a table with statistics for each difficulty or confidence level
 computeStats<- function(df,selection, filterName){
-  
-  dataframe <- data.frame(one=double(),two=double(), three=double(), four=double(), five=double());
+ 
+  dataframe <- data.frame(Confidence=double(),Accuracy=double(), Precision=double(), Recall=double(), Answers=double() );
   
   for(i in 1:5){
     outcomesDF<- selectOutcomes(df,selection==i);
-    dataframe[1,i]<-c(computeAccuracy(outcomesDF));
-    dataframe[2,i]<-c(computePrecision(outcomesDF));
-    dataframe[3,i]<-c(computeRecall(outcomesDF));
-    dataframe[4,i]<-c(sum(outcomesDF[1,]));
+    dataframe[i,1]<-c(i);
+    dataframe[i,2]<-computeAccuracy(outcomesDF);
+    dataframe[i,3]<-computePrecision(outcomesDF);
+    dataframe[i,4]<-computeRecall(outcomesDF);
+    dataframe[i,5]<-sum(outcomesDF[1,]);
   }
   print(filterName);
   print(dataframe);
+  message("Total answers:" , sum(dataframe$Answers));
+
+  return(dataframe);
 }
 
 
 ## ALL answers
-stats<- computeStats(dataf,dataf$Answer.confidence,"All Answers - confidence");
-sum(stats[4,]);
+stats1<- computeStats(dataf,dataf$Answer.confidence,"All Answers - confidence");
 
 #### ANSWER OPTION
 ## Only YES's
 dataYES <- dataf [(dataf$Answer.option=="YES") ,];
-stats<- computeStats(dataYES,dataYES$Answer.confidence,"Only YES Answers - confidence");
+stats2<- computeStats(dataYES,dataYES$Answer.confidence,"Only YES Answers - confidence");
 
 ## Only NO's
 dataNO <- dataf [(dataf$Answer.option=="NO") ,];
-stats<- computeStats(dataNO,dataNO$Answer.confidence,"Only NO Answers - confidence");
+stats3<- computeStats(dataNO,dataNO$Answer.confidence,"Only NO Answers - confidence");
+
+#Plotting Answer Options
+install.packages("ggplot2");
+library("ggplot2");
+#library("reshape2");
+
+  #metrics<- melt(stats, id.vars="Confidence", value.name="level", variable.name="Metric");
+
+  ggplot(stats1, aes(x=Confidence),fill="Metrics") +
+  geom_line(aes(y = Accuracy, colour="Accuracy")) + 
+  geom_line(aes(y = Recall, colour = "Recall")) +
+  geom_line(aes(y = Precision, colour = "Precision")) +
+  ggtitle("Metrics for all answers")+
+  ylab(label="Metrics") + 
+  xlab("Confidence")+
+  scale_colour_manual("", 
+                      breaks =c("Accuracy" ,"Precision" ,"Recall"),
+                    values =c("Accuracy"="blue","Precision"="red","Recall"="black"));
+  
+
+p1 <- ggplot(ChickWeight, aes(x=Time, y=weight, colour=Diet, group=Chick)) +
+  geom_line() +
+  ggtitle("Growth curve for individual chicks")
+
+p1 <- ggplot(ChickWeight, aes(x=Time, y=weight, colour=Diet, group=Chick)) +
+  geom_line() +
+  ggtitle("Growth curve for individual chicks")
+
+
+#################################################################################3
 
 #### WORKER PROFESSION
 ## Only PROFESSIONAL_DEVELOPERS
@@ -100,5 +134,35 @@ sum(stats[4,]);
 
 
 #### JAVA METHOD
+dataProf <- dataf [(dataf$FailingMethod =="HIT01_8") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT01_8 - confidence");
+sum(stats[4,]);
 
+dataProf <- dataf [(dataf$FailingMethod =="HIT02_24") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT02_24 - confidence");
+sum(stats[4,]);
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT03_6") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT03_6 - confidence");
+sum(stats[4,]);
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT04_7") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT04_7 - confidence");
+sum(stats[4,]);
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT05_35") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT05_35 - confidence");
+sum(stats[4,]);
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT06_51") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT06_51 - confidence");
+sum(stats[4,]);
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT07_33") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT07_33 - confidence");
+sum(stats[4,]);
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT08_54") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT08_54 - confidence");
+sum(stats[4,]);
 
