@@ -35,7 +35,12 @@ computeAccuracy<- function(df){
 
 #Compute precision for each level of difficulty and confidence
 computePrecision<- function(df){
-  return((df$TP)/(df$TP+df$FP));
+  result<-(df$TP)/(df$TP+df$FP);
+  if(is.nan(sum(result))){
+    index<- is.nan(result);
+    result[index]<-0;
+  }
+  return(result);
 }
 
 #Compute precision for each level of difficulty and confidence
@@ -50,7 +55,7 @@ computeStats<- function(df,selection, filterName){
   
   for(i in 1:5){
     outcomesDF<- selectOutcomes(df,selection==i);
-    dataframe[i,1]<-c(i);
+    dataframe[i,1]<-i;
     dataframe[i,2]<-computeAccuracy(outcomesDF);
     dataframe[i,3]<-computePrecision(outcomesDF);
     dataframe[i,4]<-computeRecall(outcomesDF);
@@ -79,29 +84,46 @@ stats3<- computeStats(dataNO,dataNO$Answer.confidence,"Only NO Answers - confide
 #Plotting Answer Options
 install.packages("ggplot2");
 library("ggplot2");
-#library("reshape2");
+source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//correlationGraphs//multiplot.R");
 
-  #metrics<- melt(stats, id.vars="Confidence", value.name="level", variable.name="Metric");
+## Builds plots with multiple lines
+plotMultiLine <- function(stats,title){
 
-  ggplot(stats1, aes(x=Confidence),fill="Metrics") +
+  multiplot <- ggplot(stats, aes(x=Confidence),fill="Metrics") +
   geom_line(aes(y = Accuracy, colour="Accuracy")) + 
   geom_line(aes(y = Recall, colour = "Recall")) +
   geom_line(aes(y = Precision, colour = "Precision")) +
-  ggtitle("Metrics for all answers")+
+  ggtitle(title) +
   ylab(label="Metrics") + 
-  xlab("Confidence")+
+  xlab("Confidence") +
   scale_colour_manual("", 
-                      breaks =c("Accuracy" ,"Precision" ,"Recall"),
-                    values =c("Accuracy"="blue","Precision"="red","Recall"="black"));
+                      breaks = c("Accuracy" ,"Recall","Precision"),
+                      values = c("Accuracy"="blue","Recall"="black","Precision"="red"))+
+    scale_y_continuous(limits = c(0, 1));
+ 
+   return(multiplot);
+}
+
+plotSingleLine <- function(stats,title){
   
+  singlePlot <- ggplot(stats, aes(x=Confidence),fill="Metrics") +
+    geom_line(aes(y = Accuracy, colour="Accuracy")) + 
+    ggtitle(title) +
+    ylab(label="Metrics") + 
+    xlab("Confidence") +
+    scale_colour_manual("", 
+                        breaks = c("Accuracy"),
+                        values = c("Accuracy"="blue"))+
+  scale_y_continuous(limits = c(0, 1));
+  return(singlePlot);
+}
 
-p1 <- ggplot(ChickWeight, aes(x=Time, y=weight, colour=Diet, group=Chick)) +
-  geom_line() +
-  ggtitle("Growth curve for individual chicks")
+# breaks =c("Accuracy" ,"Recall","Precision")
+p1<- plotMultiLine(stats1,"All answers");
+p2<- plotSingleLine(stats2,"Only Yes answers");
+p3<- plotSingleLine(stats3,"Only No answers");
+multiplot(p1, p2, p3, cols=2);
 
-p1 <- ggplot(ChickWeight, aes(x=Time, y=weight, colour=Diet, group=Chick)) +
-  geom_line() +
-  ggtitle("Growth curve for individual chicks")
 
 
 #################################################################################3
