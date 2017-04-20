@@ -18,8 +18,8 @@ length(dataf$TP)
 
 
 #Select TP, TN, FP, FN for the item
-selectOutcomes <- function(dataf,lineNumbers){
-  dataf_confidence <- dataf [(lineNumbers) ,];
+selectOutcomes <- function(df,lineNumbers){
+  dataf_confidence <- df [(lineNumbers) ,];
   TP <- sum(dataf_confidence$TP);
   TN <- sum(dataf_confidence$TN);
   FP <- sum(dataf_confidence$FP);
@@ -61,12 +61,44 @@ computeStats<- function(df,selection, filterName){
 
 ## ALL answers
 stats<- computeStats(dataf,dataf$Answer.confidence,"All Answers - confidence");
-sum(stats[4,])
+sum(stats[4,]);
 
-## Ignoring IDK answers
-dataIDK <- dataf [!(dataf$Answer.option=="IDK") ,];
-stats<- computeStats(dataIDK,dataIDK$Answer.confidence,"All Answers - confidence");
+#### ANSWER OPTION
+## Only YES's
+dataYES <- dataf [(dataf$Answer.option=="YES") ,];
+stats<- computeStats(dataYES,dataYES$Answer.confidence,"Only YES Answers - confidence");
 
-#Ignore the IDK answers because we cannot evaluate their accuracy
-dataf <- dataf [!(dataf$Answer.option=="IDK") ,];
+## Only NO's
+dataNO <- dataf [(dataf$Answer.option=="NO") ,];
+stats<- computeStats(dataNO,dataNO$Answer.confidence,"Only NO Answers - confidence");
+
+#### WORKER PROFESSION
+## Only PROFESSIONAL_DEVELOPERS
+dataProf <- dataf [(dataf$Worker.profession=="Professional_Developer") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only PROFESSIONAL_DEVELOPERS - confidence");
+sum(stats[4,]);
+
+## Only HOBBYIST´S
+dataProf <- dataf [(dataf$Worker.profession=="Hobbyist") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HOBBYIST - confidence");
+sum(stats[4,]);
+
+## Only GRADUATE_STUDENT´S
+dataProf <- dataf [(dataf$Worker.profession=="Graduate_Student") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only GRADUATE_STUDENT - confidence");
+sum(stats[4,]);
+
+## Only UNDERGRADUATE_STUDENT´S
+dataProf <- dataf [(dataf$Worker.profession=="Undergraduate_Student") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only UNDERGRADUATE_STUDENT - confidence");
+sum(stats[4,]);
+
+## Only OTHER´S
+dataProf <- dataf [(dataf$Worker.profession=="Other") ,];
+stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only OTHER - confidence");
+sum(stats[4,]);
+
+
+#### JAVA METHOD
+
 
