@@ -111,9 +111,9 @@ plotSingleLine <- function(stats,title){
     ggtitle(title) +
     ylab(label="Metrics") + 
     xlab("Confidence") +
-    scale_colour_manual("", 
-                        breaks = c("Accuracy"),
-                        values = c("Accuracy"="blue"))+
+     scale_colour_manual("", 
+                         breaks = c("Accuracy"),
+                         values = c("Accuracy"="blue"))+
   scale_y_continuous(limits = c(0, 1));
   return(singlePlot);
 }
@@ -167,34 +167,42 @@ multiplot(p1, p2, p3, p4, p5, cols=3);
 
 #### JAVA METHOD
 dataProf <- dataf [(dataf$FailingMethod =="HIT01_8") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT01_8 - confidence");
-sum(stats[4,]);
+stats1<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT01_8 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT02_24") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT02_24 - confidence");
-sum(stats[4,]);
+stats2<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT02_24 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT03_6") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT03_6 - confidence");
-sum(stats[4,]);
+stats3<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT03_6 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT04_7") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT04_7 - confidence");
-sum(stats[4,]);
+stats4<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT04_7 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT05_35") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT05_35 - confidence");
-sum(stats[4,]);
+stats5<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT05_35 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT06_51") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT06_51 - confidence");
-sum(stats[4,]);
+stats6<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT06_51 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT07_33") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT07_33 - confidence");
-sum(stats[4,]);
+stats7<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT07_33 - confidence");
 
 dataProf <- dataf [(dataf$FailingMethod =="HIT08_54") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT08_54 - confidence");
-sum(stats[4,]);
+stats8<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT08_54 - confidence");
+
+# breaks =c("Accuracy" ,"Recall","Precision")
+
+p2<- plotSingleLine(stats2,"HIT02_24");
+p5<- plotSingleLine(stats5,"HIT05_35");
+p7<- plotSingleLine(stats7,"HIT07_33");
+p1<- plotSingleLine(stats1,"HIT01_8");
+p3<- plotSingleLine(stats3,"HIT03_6");
+p6<- plotSingleLine(stats6,"HIT06_51");
+p8<- plotSingleLine(stats8,"HIT08_54");
+p4<- plotSingleLine(stats4,"HIT04_7");
+
+multiplot(p2, p5, p7, p1,cols=4);
+          
+#          p3, p6, p8, p4, cols=8);
+
 
