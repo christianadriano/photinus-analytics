@@ -124,36 +124,46 @@ p2<- plotSingleLine(stats2,"Only Yes answers");
 p3<- plotSingleLine(stats3,"Only No answers");
 multiplot(p1, p2, p3, cols=2);
 
+##################################################################################
 
 
-#################################################################################3
+
+
+
+
+################################################################################
 
 #### WORKER PROFESSION
 ## Only PROFESSIONAL_DEVELOPERS
 dataProf <- dataf [(dataf$Worker.profession=="Professional_Developer") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only PROFESSIONAL_DEVELOPERS - confidence");
-sum(stats[4,]);
+stats1<- computeStats(dataProf,dataProf$Answer.confidence,"Only PROFESSIONAL_DEVELOPERS - confidence");
 
 ## Only HOBBYIST´S
 dataProf <- dataf [(dataf$Worker.profession=="Hobbyist") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only HOBBYIST - confidence");
-sum(stats[4,]);
+stats2<- computeStats(dataProf,dataProf$Answer.confidence,"Only HOBBYIST - confidence");
 
 ## Only GRADUATE_STUDENT´S
 dataProf <- dataf [(dataf$Worker.profession=="Graduate_Student") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only GRADUATE_STUDENT - confidence");
-sum(stats[4,]);
+stats3<- computeStats(dataProf,dataProf$Answer.confidence,"Only GRADUATE_STUDENT - confidence");
 
 ## Only UNDERGRADUATE_STUDENT´S
 dataProf <- dataf [(dataf$Worker.profession=="Undergraduate_Student") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only UNDERGRADUATE_STUDENT - confidence");
-sum(stats[4,]);
+stats4<- computeStats(dataProf,dataProf$Answer.confidence,"Only UNDERGRADUATE_STUDENT - confidence");
 
 ## Only OTHER´S
 dataProf <- dataf [(dataf$Worker.profession=="Other") ,];
-stats<- computeStats(dataProf,dataProf$Answer.confidence,"Only OTHER - confidence");
-sum(stats[4,]);
+stats5<- computeStats(dataProf,dataProf$Answer.confidence,"Only OTHER - confidence");
 
+# breaks =c("Accuracy" ,"Recall","Precision")
+p1<- plotMultiLine(stats1,"Professional Developers");
+p2<- plotMultiLine(stats2,"Hobbyists");
+p3<- plotMultiLine(stats3,"Graduate students");
+p4<- plotMultiLine(stats4,"Undergraduate students");
+p5<- plotMultiLine(stats5,"Others");
+multiplot(p1, p2, p3, p4, p5, cols=3);
+
+
+################################################################################
 
 #### JAVA METHOD
 dataProf <- dataf [(dataf$FailingMethod =="HIT01_8") ,];
