@@ -1,5 +1,5 @@
 #
-# Compute correlation among difficulty and confidence and accuracy
+# Compute correlation between confidence and accuracy
 #
 
 loadAnswers<- function(fileName){
@@ -123,12 +123,6 @@ p1<- plotMultiLine(stats1,"All answers");
 p2<- plotSingleLine(stats2,"Only Yes answers");
 p3<- plotSingleLine(stats3,"Only No answers");
 multiplot(p1, p2, p3, cols=2);
-
-##################################################################################
-
-
-
-
 
 
 ################################################################################
@@ -400,6 +394,62 @@ stats7<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT07_33 - confi
 dataProf <- dataf [(dataf$FailingMethod =="HIT08_54") ,];
 dataProf <- dataProf [(dataProf$Worker.profession=="Professional_Developer"),];
 dataProf <- dataProf [(dataProf$Answer.option=="YES"),];
+stats8<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT08_54 - confidence");
+
+p2<- plotSingleLine(stats2,"HIT02_24");
+p5<- plotSingleLine(stats5,"HIT05_35");
+p7<- plotSingleLine(stats7,"HIT07_33");
+p1<- plotSingleLine(stats1,"HIT01_8");
+p3<- plotSingleLine(stats3,"HIT03_6");
+p6<- plotSingleLine(stats6,"HIT06_51");
+p8<- plotSingleLine(stats8,"HIT08_54");
+p4<- plotSingleLine(stats4,"HIT04_7");
+
+multiplot(p2, p5, p7, p1,cols=4);
+
+multiplot(p3, p6, p8, p4, cols=4);
+
+################################################################################
+# Java METHOD and UNDERGRADS and NO ANSWER OPTION
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT01_8") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats1<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT01_8 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT02_24") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats2<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT02_24 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT03_6") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats3<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT03_6 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT04_7") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats4<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT04_7 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT05_35") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats5<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT05_35 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT06_51") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats6<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT06_51 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT07_33") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
+stats7<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT07_33 - confidence");
+
+dataProf <- dataf [(dataf$FailingMethod =="HIT08_54") ,];
+dataProf <- dataProf [(dataProf$Worker.profession=="Undergraduate_Student"),];
+dataProf <- dataProf [(dataProf$Answer.option=="NO"),];
 stats8<- computeStats(dataProf,dataProf$Answer.confidence,"Only HIT08_54 - confidence");
 
 p2<- plotSingleLine(stats2,"HIT02_24");
