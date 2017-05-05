@@ -1,0 +1,71 @@
+---
+title: "Accuracy distribution across Questions"
+author: "Christian Medeiros Adriano"
+date: "May 5, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+#Load Answers into a dataframe
+#It also removes invalid input and outliers
+
+  setwd("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//");
+  fileName = "answerList_data.csv";
+  
+  data_all <- read.csv(fileName,header = TRUE,sep=",");
+  
+  #First I need to look at the outliers or invalid values
+  #Invalid age and invalid years of experience
+  
+  #Remove rows with not available data
+  dataf <- data_all [rowSums(is.na(data_all))==0,];
+  
+  summary(dataf);
+  
+  #Remove Invalid age and invalid years of experience
+  dataf <- dataf [!dataf$Worker.yearsOfExperience <0,];
+  dataf <- dataf [!dataf$Worker.age <18,];##minimum age to participate
+  
+  #Remove people with no experience in programming
+  dataf <- dataf [!dataf$Worker.yearsOfExperience ==0,];
+  
+  #Remove people who whose age and experience 
+  dataf <- dataf [!(dataf$Worker.age - dataf$Worker.yearsOfExperience) <5,];
+  
+  #Remove outliers
+  dataf <- dataf [!dataf$Worker.yearsOfExperience >40,];
+  dataf <- dataf [!dataf$Worker.age >80,];
+  
+  #summary (dataf);
+  cat("Data successfully loaded. Number of entries:",length(dataf[,1]));
+
+```
+
+## Is worker quality uniformly distributed across questions?
+This is important so when we filter by quality of worker, we do not favor some questions over the others.
+
+### ACCURACY DISTRIBUTION ACROSS QUESTIONS
+# Compute the number of correct answers per each of the 129 questions
+
+```{echo=FALSE}
+subsetTPTN_df <-subset(dataf,select= c(Question.ID, TP, TN));
+TrueCount <- subsetTPTN_df$TP + subsetTPTN_df$TN;
+subsetTPTN_df <- data.frame(subsetTPTN_df);
+subsetTPTN_df["TrueCount"]<-TrueCount;
+
+install.packages('dplyr', dependencies = TRUE);
+library(dplyr);
+by_questions<- group_by(subsetTPTN_df,Question.ID) ;
+TrueCountTable <- summarize(by_questions,sum(TrueCount));
+colnames(TrueCountTable)<-c("QuestoinID","TrueCount");
+
+library(ggplot2);
+ggplot(TrueCountTable,aes(x=TrueCount)) + geom_histogram(binwidth = 0.5);
+#shape of the histogram resembles a normal distribuion
+
+#Nonetheless, the data actually does not pass the Shapiro-Wilk normality test 
+shapiro.test(TrueCountTable$TrueCount);
+```
+
