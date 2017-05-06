@@ -1,8 +1,8 @@
-name: Document
+name: Publish Document
 title:
 account: rpubs
 server: rpubs.com
 appId: https://api.rpubs.com/api/v1/document/274000/0b4b004b8c9a45aa957c1420de473f42
 bundleId: https://api.rpubs.com/api/v1/document/274000/0b4b004b8c9a45aa957c1420de473f42
-url: http://rpubs.com/publish/claim/274000/07ce597ecb7f42bf86a34b819dadab0f
-when: 1494080024.58205
+url: http://rpubs.com/christian_adriano/274000
+when: 1494080483.71841

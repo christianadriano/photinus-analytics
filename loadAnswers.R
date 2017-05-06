@@ -23,7 +23,7 @@ loadAnswers<- function(){
   #Remove people with no experience in programming
   dataf <- dataf [!dataf$Worker.yearsOfExperience ==0,]
   
-  #Remove people who whose age and experience 
+  #Remove people whose age doesn´t macht with experience 
   dataf <- dataf [!(dataf$Worker.age - dataf$Worker.yearsOfExperience) <5,]
   
   #Remove outliers

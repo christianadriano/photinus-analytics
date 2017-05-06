@@ -1,12 +1,32 @@
 ---
-title: "Accuracy distribution across Questions"
+title: "Distribution of correct answers per question"
 author: "Christian Medeiros Adriano"
-date: "May 5, 2017"
+date: "May 6, 2017"
 output: html_document
 ---
 
+ 
+<h3>About the data</h3>
+Mechanical Turk workers answered questions about different popular open source projects. More specifically, workers were asked if they believed that a set of lines of Java source code were related to a software failure (e.g., null pointer exception). More than 600 workers provided 2580 answers for 129 different question (each question was asked to 20 different workers). The experiment that generated this data is described in this <a href=https://export.arxiv.org/abs/1612.03015>paper</a>  
+
+<h3>About the larger study</h3> 
+I am studying how to delegate tasks to workers in a way that I am to identify software faults with more precision while asking fewer questions than in the original study. My approach is to investigate how to predict which answers from which workers have the highest accuracy. Therefore, the my first step is to understand which factors affect answer accuracy, as for example: worker skill, worker confidence on her answers, worker perceived difficulty of questions, and size and complexity of the source code. 
+
+<h3>The goal of this analysis</h3>
+I tried to answer the following questions:
+<du>
+  <li>How is answer accuracy distributed over all the questions asked? </li>
+  <li>What are the questions with the most and least accurate answers? </li>
+  <li>Do these questions have anything in common? </li>
+</du>
+
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE);
+#install.packages('dplyr', dependencies = TRUE);
+library(ggplot2);
+library(dplyr);
+
 
 #Load Answers into a dataframe
 #It also removes invalid input and outliers
@@ -22,8 +42,6 @@ knitr::opts_chunk$set(echo = TRUE)
   #Remove rows with not available data
   dataf <- data_all [rowSums(is.na(data_all))==0,];
   
-  summary(dataf);
-  
   #Remove Invalid age and invalid years of experience
   dataf <- dataf [!dataf$Worker.yearsOfExperience <0,];
   dataf <- dataf [!dataf$Worker.age <18,];##minimum age to participate
@@ -31,41 +49,38 @@ knitr::opts_chunk$set(echo = TRUE)
   #Remove people with no experience in programming
   dataf <- dataf [!dataf$Worker.yearsOfExperience ==0,];
   
-  #Remove people who whose age and experience 
+  #Remove people whose age doesn´t macht with experience 
   dataf <- dataf [!(dataf$Worker.age - dataf$Worker.yearsOfExperience) <5,];
   
   #Remove outliers
   dataf <- dataf [!dataf$Worker.yearsOfExperience >40,];
   dataf <- dataf [!dataf$Worker.age >80,];
-  
-  #summary (dataf);
-  cat("Data successfully loaded. Number of entries:",length(dataf[,1]));
-
 ```
 
-## Is worker quality uniformly distributed across questions?
-This is important so when we filter by quality of worker, we do not favor some questions over the others.
+Compute the number of correct answers per each of the 129 questions
 
-### ACCURACY DISTRIBUTION ACROSS QUESTIONS
-# Compute the number of correct answers per each of the 129 questions
-
-```{echo=FALSE}
+```{r dataWrangling, echo=FALSE}
+#summary (dataf);
+cat("Data successfully loaded. Number of entries:",length(dataf[,1]));
+    
 subsetTPTN_df <-subset(dataf,select= c(Question.ID, TP, TN));
-TrueCount <- subsetTPTN_df$TP + subsetTPTN_df$TN;
+CorrectAnswers <- subsetTPTN_df$TP + subsetTPTN_df$TN;
 subsetTPTN_df <- data.frame(subsetTPTN_df);
-subsetTPTN_df["TrueCount"]<-TrueCount;
+subsetTPTN_df["CorrectAnswers"]<-CorrectAnswers;
 
-install.packages('dplyr', dependencies = TRUE);
-library(dplyr);
 by_questions<- group_by(subsetTPTN_df,Question.ID) ;
-TrueCountTable <- summarize(by_questions,sum(TrueCount));
-colnames(TrueCountTable)<-c("QuestoinID","TrueCount");
-
-library(ggplot2);
-ggplot(TrueCountTable,aes(x=TrueCount)) + geom_histogram(binwidth = 0.5);
-#shape of the histogram resembles a normal distribuion
-
-#Nonetheless, the data actually does not pass the Shapiro-Wilk normality test 
-shapiro.test(TrueCountTable$TrueCount);
+summaryTable <- summarize(by_questions,sum(CorrectAnswers));
+colnames(summaryTable)<-c("QuestoinID","CorrectAnswers");
 ```
+<h3>Plotting distribution</h3>
+```{r plotting, echo=FALSE}
+ggplot(summaryTable,aes(x=CorrectAnswers))+geom_histogram(binwidth = 0.25) + ggtitle("Distribution of correct answers per question - true positives and true negatives") + labs(y="question count", x="correct answers per question");
+```
+<p> Since the shape of the histogram resembles a normal distribuion, I performed a Shapiro-Wilk normality test. This test is based on null-hypothesis that the sample comes from a normal distribution. This means that if I reject the null-hipothesis (p-value<0.05), then there is evidence tha the data does not come from a normal distribution. As shown in the output of the test below, the distribution of correct answers per question is not normally distributed.</p>
 
+```{r shapiro, echo=FALSE}
+shapiro.test(summaryTable$CorrectAnswers);
+
+```
+<p> Next analysis will be to look at distribution of worker skill and profession per questions.
+This is imporanto to verify if some questions were favored by being answered by more qualified workers. Note however, that the cause of different levels of accuracy migtht also be a result of some questions being considered easier to answer  than others.</p>
