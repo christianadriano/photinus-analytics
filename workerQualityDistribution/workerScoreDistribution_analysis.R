@@ -97,10 +97,53 @@ wilcox.test(tableScore_5$scoreCount,tableScore_4$scoreCount,alternative = c("two
 #number of scores at level 3 x 3 + at level 4 X 4, at level 5 x 5
 #after that I divide by 3 to take the average.
 
-tableScore<-tableScore_3;
-tableScore["level_3"]<tableScore_3$scoreCount;
-tableScore["level_4"]<tableScore_4$scoreCount;
-tableScore["level_5"]<tableScore_5$scoreCount;
+tableScores<-matrix(, nrow = 129, ncol = 4);
+tableScores[,1]<-tableScore_3$QuestoinID;
+tableScores[,2]<-tableScore_3$scoreCount;
+tableScores[,3]<-tableScore_4$scoreCount;
+tableScores[,4]<-tableScore_5$scoreCount;
+colnames(tableScores)<-c("QuestionID","level_3","level_4","level_5");
 
+scores<-c(3,4,5);
+countVec<-c(1,1,1);
 
+productScores<-(tableScores[,2:4]%*%scores); #vector product
+countItemsVec<-(tableScores[,2:4]%*%countVec); #count number of scores per question
+averageScores<- productScores / countItemsVec; #obtain the average score for each question
 
+boxplot(averageScores)
+summary(averageScores)
+#We can see that the interval of average scores is reasonably tight, from 3.8 to 4.6
+#We have two data points below 3.8, which I at least one outlier below 3.8
+
+#Remove outliers
+averageScores<-data.frame(averageScores);
+averageScores <-averageScores[!averageScores$averageScores<3.8,]
+
+#Plot distribution
+averageScores<-data.frame(averageScores);
+colnames(averageScores)<-"averageScores";
+
+title<- paste("Fig.4 - Distribution of average worker score per question");
+ggplot(averageScores,aes(x=averageScores))+
+  geom_histogram(binwidth = 0.02) +
+  ggtitle(title) +
+  labs(y="score count", x="average worker score per question")
+
+#Distribution is normal
+shapiro.test(averageScores$averageScores);
+
+# Since scores are discrete, 3, 4, or 5. We can calculate probability of a question having 
+# an average score different than 4 (below or above 4).
+
+scores<-averageScores$averageScores;
+pop_sd <- sd(scores)*sqrt((length(scores)-1)/(length(scores)))
+pop_mean <- mean(scores)
+z <- (4 - pop_mean) / pop_sd  
+
+cat("Probability of average score above 4=", round((1-pnorm(z))*100,2),"%");
+
+#Conclusion
+#Although workers are not uniformly distributed in terms of score, average worker score per 
+#question follows a normal distribution and scores above 4 for 90% of questions, which represents 
+#a small variation.
