@@ -1,5 +1,5 @@
 ---
-title: "Worker score distribution across questions"
+title: "Were some questions answered by more skillful workers?"
 author: "Christian Medeiros Adriano"
 date: "May 8, 2017"
 output: html_document
@@ -7,13 +7,20 @@ output: html_document
 
 
 ### The goal of this analysis
-  How worker quality is distributed across questions? i.e., what is the distribution of workers with score level x across questions? Worker quality was measured by three attributes. 
+  <p>Distribution of worker skill level across questions has the potential to bias the outcomes of the larger crowdsourcing task. The reason is that software faults can be overlooked if they are covered by questions* that were mostly answered by lower skill workers. </p>
+
+<p>*Each question covers a certain number of source code lines. Questions have the following format:"Do you believe the source code between lines 35 and 45 is related to the described failure?"</p>
+  
+<p>  Therefore, my goal is to investigate how worker skill level is distributed across questions. Worker skill level was measured by the following three attributes. 
   <du>
   <li>Test score: workers received a score (zero to five) after performing a computer programming test used to filter
    out workers without enough programming knowledge. Workers who scored 2 or less were not allowed to participate.
   <li>Years of programming experience: Worker quality can also be measured by years of programming experience, which is an information self-declared by workers befote they take any test. 
-   <li>Profession:worker profession is also an indicator of quality. Professions consisted of professional programmers, hobbyists, graduate students, undergraduate students, and others.
-   
+   <li>Profession: worker profession is also an indicator of quality. Professions consisted of professional programmers, hobbyists, graduate students, undergraduate students, and others.
+   </du>
+
+<p>The analysis below focuses only on the worker test score.</p>
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
