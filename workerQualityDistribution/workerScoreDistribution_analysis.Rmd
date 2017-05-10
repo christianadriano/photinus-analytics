@@ -6,7 +6,7 @@ output: html_document
 ---
 
 
-### The goal of this analysis
+### The goal of the study
   <p>Distribution of worker skill level across questions has the potential to bias the outcomes of the larger crowdsourcing task. The reason is that software faults can be overlooked if they are covered by questions* that were mostly answered by lower skill workers. </p>
 
 <p>*Each question covers a certain number of source code lines. Questions have the following format:"Do you believe the source code between lines 35 and 45 is related to the described failure?"</p>
@@ -19,7 +19,8 @@ output: html_document
    <li>Profession: worker profession is also an indicator of quality. Professions consisted of professional programmers, hobbyists, graduate students, undergraduate students, and others.
    </du>
 
-<p>The analysis below focuses only on the worker test score.</p>
+###Focus of the current analysis
+<p>The current analysis focuses only on the <b>worker test score</b>.</p>
 
 
 ```{r setup, include=FALSE}
@@ -101,8 +102,6 @@ were answered by workers with lower score, might have been overlooked.
 
 However, on average, worker score might still be more uniformly distributed
 across questions. This is what I will investigate next.
-
-We can also look at how questions were distributed in terms of woker average score 
 
 ```{r, echo=FALSE}
 ##Data formatting
