@@ -48,7 +48,7 @@ countScoreLevel<- function(level){
 }
 
 level<-3;
-tableScore_3 = countScoreLevel(level);
+tableScore_3 <- countScoreLevel(level);
 title<- paste("Fig.1 - Distribution of worker with score level",level,"across questions");
 ```
 ```{r, echo=FALSE}
@@ -65,7 +65,7 @@ This is also the case for the score levels 4 and 5 as shown in the charts below.
 
 ```{r, echo=FALSE}
 level<- 4;
-tableScore_4 = countScoreLevel(level);
+tableScore_4 <- countScoreLevel(level);
 title<- paste("Fig.2 - Distribution of worker with score level",level,"across questions");
 ggplot(tableScore_4,aes(x=scoreCount))+
   geom_histogram(binwidth = 0.2) +
@@ -75,7 +75,7 @@ ggplot(tableScore_4,aes(x=scoreCount))+
 shapiro.test(tableScore_4$scoreCount);
 
 level<- 5;
-tableScore_5 = countScoreLevel(level);
+tableScore_5 <- countScoreLevel(level);
 title<- paste("Fig.3 - Distribution of worker with score level",level,"across questions");
 ggplot(tableScore_5,aes(x=scoreCount))+
   geom_histogram(binwidth = 0.2) +
