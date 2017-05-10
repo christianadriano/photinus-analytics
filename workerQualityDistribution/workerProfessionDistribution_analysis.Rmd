@@ -1,0 +1,108 @@
+---
+title: "How professions are distributed among questions?"
+author: "Christian Medeiros Adriano"
+date: "May 10, 2017"
+output: html_document
+---
+
+### The goal of the study
+  <p>Distribution of worker skill level across questions has the potential to bias the outcomes of the larger crowdsourcing task. The reason is that software faults can be overlooked if they are covered by questions* that were mostly answered by lower skill workers. </p>
+
+<p>*Each question covers a certain number of source code lines. Questions have the following format:"Do you believe the source code between lines 35 and 45 is related to the described failure?"</p>
+  
+<p>  Therefore, my goal is to investigate how worker skill level is distributed across questions. Worker skill level was measured by the following three attributes. 
+  <du>
+  <li>Test score: workers received a score (zero to five) after performing a computer programming test used to filter
+   out workers without enough programming knowledge. Workers who scored 2 or less were not allowed to participate.
+  <li>Years of programming experience: Worker quality can also be measured by years of programming experience, which is an information self-declared by workers befote they take any test. 
+   <li>Profession: worker profession is also an indicator of quality. Professions consisted of professional programmers, hobbyists, graduate students, undergraduate students, and others.
+   </du>
+
+###Focus of the current analysis
+<p>The current analysis focuses only on the <b>worker profession</b>.</p>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr);
+library(ggplot2);
+source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//loadAnswers.R");
+source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//multiplot.R");
+
+dataf =loadAnswers();
+
+##function to count the numer of workers with profession X for each question
+countItem<- function(dataf, profession){
+  subset_df <-subset(dataf,select= c(Worker.profession));
+  subset_df <- data.frame(subset_df); 
+  
+  itemCount<- rowSums(subset_df==profession); 
+  subset_df["itemCount"] <- itemCount;
+  subset_df["Question.ID"] <- dataf$Question.ID;
+
+  subset_df <-subset(subset_df,select= c(Question.ID,itemCount));
+  question_by <- group_by(subset_df,Question.ID);
+  summaryTable <- summarize(question_by,sum(itemCount));
+  colnames(summaryTable)<-c("QuestoinID","itemCount");
+ 
+  return(summaryTable);
+}
+```
+
+## Actual analysis
+```{r analysis, echo=FALSE}
+
+fontSize<-12;
+
+profession<-"Professional_Developer";
+dt<-countItem(dataf,profession);
+title<- paste("Fig.1 - Distribution of ",profession," workers across questions");
+p1<- ggplot(dt,aes(x=itemCount))+
+  geom_histogram(binwidth = 0.2) +
+  ggtitle(title) +
+  theme(plot.title = element_text(size = fontSize))+
+  labs(y="question count", x=paste(profession," workers per question"));
+
+profession<-"Graduate_Student";
+dt<-countItem(dataf,profession);
+title<- paste("Fig.2 - Distribution of ",profession," workers across questions");
+p2<- ggplot(dt,aes(x=itemCount))+
+  geom_histogram(binwidth = 0.2) +
+  ggtitle(title) +
+  theme(plot.title = element_text(size = fontSize))+
+  labs(y="question count", x=paste(profession," workers per question"));
+
+profession<-"Hobbyist";
+dt<-countItem(dataf,profession);
+title<- paste("Fig.3 - Distribution of ",profession," workers across questions");
+p3<- ggplot(dt,aes(x=itemCount))+
+  geom_histogram(binwidth = 0.2) +
+  ggtitle(title) +
+  theme(plot.title = element_text(size = fontSize))+
+  labs(y="question count", x=paste(profession," workers per question"));
+
+profession<-"Undergraduate_Student";
+dt<-countItem(dataf,profession);
+title<- paste("Fig.4 - Distribution of ",profession," workers across questions");
+p4<- ggplot(dt,aes(x=itemCount))+
+  geom_histogram(binwidth = 0.2) +
+  ggtitle(title) +
+  theme(plot.title = element_text(size = fontSize))+
+  labs(y="question count", x=paste(profession," workers per question"));
+
+profession<-"Other";
+dt<-countItem(dataf,profession);
+title<- paste("Fig.5 - Distribution of ",profession," workers across questions");
+p5<- ggplot(dt,aes(x=itemCount))+
+  geom_histogram(binwidth = 0.2) +
+  ggtitle(title) +
+  theme(plot.title = element_text(size = 12))+
+  labs(y="question count", x=paste(profession," workers per question"));
+
+
+multiplot(p1,p2,p3,p4,p5,cols=2)
+
+```
+
+<p>Charts show that workers are not uniformly distributed across questions, for instance, up to 10 questions received 7 out of 20 answers from undergraduate students (Fig.4). Since undergraduates have the lowest level of answer accuracy, these questions might have been overlooked. </p>
+
+<p>While filtering workers by profession, I will have to bear this bias in mind. One way to cope with it is to run a Monte Carlo simulation on top of filtering. This way, I can minimize the effect of the existing bias on the population.</p>
