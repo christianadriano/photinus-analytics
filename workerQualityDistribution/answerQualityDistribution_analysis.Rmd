@@ -82,5 +82,7 @@ ggplot(summaryTable,aes(x=CorrectAnswers))+geom_histogram(binwidth = 0.25) + ggt
 shapiro.test(summaryTable$CorrectAnswers);
 
 ```
-<p> Next analysis will be to look at distribution of worker skill and profession per questions.
-This is imporanto to verify if some questions were favored by being answered by more qualified workers. Note however, that the cause of different levels of accuracy migtht also be a result of some questions being considered easier to answer  than others.</p>
+<h4> Why did some questions have on average different levels of answer accuracy?</h4>
+<p>This is an important reflection if we want to explore the data by filtering. The reason is that filtering can reinforce or offset certain biases already present in the data. Take for instance that some questions might have been answered by a disproportionate number of less skilled workers or workers from certain professions. Therefore, if we apply a filter by skill, we might be favoring certain questions more than others. The problem is that this effect is arbitrary, i.e., another dataset would produce a different result.</p>
+
+<p>With respect to the possible biases, I envisaged at least two sources: variation in worker quality and differences in question difficulty. I will investigate these two factors in the next analyzes. </p>
