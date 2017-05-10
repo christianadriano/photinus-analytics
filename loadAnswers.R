@@ -31,6 +31,6 @@ loadAnswers<- function(){
   dataf <- dataf [!dataf$Worker.age >80,]
   
   #summary (dataf);
-  cat("Data successfully loaded. Number of entries:",length(dataf[,1]));
+  cat("Data successfully loaded. Number of entries:",length(dataf[,1]),"\n");
   return(dataf);
 }
