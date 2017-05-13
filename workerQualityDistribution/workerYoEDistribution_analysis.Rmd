@@ -32,12 +32,14 @@ source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//mult
 
 dataf =loadAnswers();
 
-##function to count the number of YoE levels (from zero to 70) for each question
-countScoreLevel<- function(level){
+summary(dataf$Worker.yearsOfExperience)
+
+##function to count the number of YoE entries that fall within start (inclusive) and end (exclusive)
+countScoreLevel<- function(startYear, endYear){
   subset_df <-subset(dataf,select= c(Worker.score));
   subset_df <- data.frame(subset_df); 
   
-  scoreCount<- rowSums(subset_df==level); 
+  scoreCount<- rowSums(subset_df==level);
   subset_df["scoreCount"] <- scoreCount;
   subset_df["Question.ID"] <- dataf$Question.ID;
 
@@ -49,9 +51,7 @@ countScoreLevel<- function(level){
   return(summaryTable);
 }
 
-
-##function to count the number of YoE levels (from zero to 70) for each question
-
+#List the workers and respective years of experience
 listWorkerYoE<- function(dataf){
   workerYoE_vector<-{};
   #colnames(workersYoE_vec)<-c("WorkerID","YoE");
@@ -62,8 +62,24 @@ listWorkerYoE<- function(dataf){
   return(workerYoE_vector);
 }
 
+```
+
+<p> First let's see how the workers are distributed in terms of years of experience.</p>
+
+```{r setup, include=FALSE}
 workersYoE_vec <- listWorkerYoE(dataf);
-summary(workersYoE_vec);
+dt<-data.frame(workersYoE_vec);
+colnames(dt)<-c("years_of_experience");
+summary(dt);
+
+#clean-up NA's
+
+title<- paste("Fig.1 - Distribution of years of experience");
+ggplot(dt,,aes(x=YoE))+
+  geom_histogram(binwidth = 0.2) +
+  ggtitle(title) +
+  theme(plot.title = element_text(size = fontSize))+
+  labs(y="number of workers", x=paste(yearsOfExperience,"years of experience"));
 
 ```
 ## Actual analysis
