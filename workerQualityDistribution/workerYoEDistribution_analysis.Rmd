@@ -70,7 +70,7 @@ listWorkerYoE<- function(dataf){
 
 <p> First let's see how the workers are distributed in terms of years of experience.</p>
 
-```{r histogram, include=FALSE}
+```{r histogram, echo=FALSE}
 workersYoE_vec <- listWorkerYoE(dataf);
 dt<-data.frame(workersYoE_vec);
 dt["worker"]<-c(1:length(dt));
@@ -79,14 +79,14 @@ colnames(dt)<-c("years_of_experience","worker");
 summary(dt);
 
 #clean-up NA's
-
 years_of_experience.mean<- mean(dt$years_of_experience, na.rm=T);
+
 title<- paste("Fig.1 - Histogram of years of experience in computer programming (red line is the mean)");
 ggplot(dt,aes(x=years_of_experience))+
   geom_histogram(binwidth = 0.1) +
   geom_vline(data=dt, aes(xintercept=years_of_experience.mean),linetype="dashed", size=1, colour="red")+
   ggtitle(title) +
-  theme(plot.title = element_text(size = fontSize))+
+  theme(plot.title = element_text(size = 10))+
   labs(y="number of workers", x="years of experience");
 
 
@@ -94,19 +94,18 @@ ggplot(dt,aes(x=years_of_experience))+
 <p> We can obsreve that workers concentrated their information on multiples of 5 and 10. </p>
 <p> Since the distribution is very skewed (to the right in this case), the average is not a good representation of the data. The alterantive in these cases is to look at the quartiles, which are shown in the boxplot below.</p>
 
-```{r boxplot, include=FALSE}
+```{r boxplot, echo=FALSE}
 
-fontSize<-12;
 title<- paste("Fig.2 - Boxplot of years of experience in computer programming");
 ggplot(dt,aes(y=years_of_experience, x=worker))+ geom_boxplot()+
    stat_summary(fun.y=mean, fun.ymax=max, geom="point", shape=5, size=4)+
   ggtitle(title) +
-   theme(plot.title = element_text(size = fontSize))+
+   theme(plot.title = element_text(size = 10))+
    labs(x="workers", y="years of experience");
 
 summary(dt$years_of_experience);
 ```
-## Actual analysis
+
 <p> Bloxplot shows that half of the data points are bewlo 5 years of experience. 25% are between 5 and 10 years of experience. </p>
 
 
@@ -124,43 +123,45 @@ fontSize<-10;
 startYear<-0;
 endYear<-2;
 dt<-countYoE(dataf,startYear,endYear);
-title<- paste("Fig.1 - Years of experience between ",startYear," and ", endYear);
+title<- paste("Fig.1 Workers per question, YoE=[",startYear,",", endYear,"]");
 p1<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x="years of experience");
+  labs(y="question count", x="workers per question");
 
 startYear<-2;
 endYear<-5;
 dt<-countYoE(dataf,startYear,endYear);
-title<- paste("Fig.2 - Years of experience between ",startYear," and ", endYear);
+title<- paste("Fig.2 Workers per question, YoE=[",startYear,",", endYear,"]");
 p2<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x="years of experience");
+  labs(y="question count", x="workers per question");
 
 startYear<-5;
 endYear<-10;
 dt<-countYoE(dataf,startYear,endYear);
-title<- paste("Fig.3 - Years of experience between ",startYear," and ", endYear);
+title<- paste("Fig.3 Workers per question, YoE=[",startYear,",", endYear,"]");
 p3<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x="years of experience");
+  labs(y="question count", x="workers per question");
 
 startYear<-10;
 endYear<-51;
 dt<-countYoE(dataf,startYear,endYear);
-title<- paste("Fig.4 - Years of experience between ",startYear," and ", endYear);
+title<- paste("Fig.4 Workers per question, YoE=[",startYear,",", endYear,"]");
 p4<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x="years of experience");
+  labs(y="question count", x="workers per question");
 
 multiplot(p1,p2,p3,p4,cols=2)
 
 ```
+
+<p> As we can see, distributions are not uniform across questions. This suggests that some questions might have been overlooked by having been answered by less experienced workers. </p>
