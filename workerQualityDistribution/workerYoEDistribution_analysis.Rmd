@@ -32,7 +32,7 @@ source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//mult
 
 dataf =loadAnswers();
 
-summary(dataf$Worker.yearsOfExperience)
+#summary(dataf$Worker.yearsOfExperience)
 
 ##function to count the number of YoE entries that fall within start (inclusive) and end (exclusive)
 countScoreLevel<- function(startYear, endYear){
@@ -59,6 +59,10 @@ listWorkerYoE<- function(dataf){
   for(i in 1:2529){
     workerYoE_vector[dataf$Worker.ID[i]]<-dataf$Worker.yearsOfExperience[i];
   }
+  
+  #Remove NA's 
+  workerYoE_vector<- workerYoE_vector[!is.na(workerYoE_vector)]
+  
   return(workerYoE_vector);
 }
 
@@ -66,29 +70,51 @@ listWorkerYoE<- function(dataf){
 
 <p> First let's see how the workers are distributed in terms of years of experience.</p>
 
-```{r setup, include=FALSE}
+```{r histogram, include=FALSE}
 workersYoE_vec <- listWorkerYoE(dataf);
 dt<-data.frame(workersYoE_vec);
-colnames(dt)<-c("years_of_experience");
+dt["worker"]<-c(1:length(dt));
+colnames(dt)<-c("years_of_experience","worker");
+
 summary(dt);
 
 #clean-up NA's
 
-title<- paste("Fig.1 - Distribution of years of experience");
-ggplot(dt,,aes(x=YoE))+
-  geom_histogram(binwidth = 0.2) +
+years_of_experience.mean<- mean(dt$years_of_experience, na.rm=T);
+title<- paste("Fig.1 - Histogram of years of experience in computer programming (red line is the mean)");
+ggplot(dt,aes(x=years_of_experience))+
+  geom_histogram(binwidth = 0.1) +
+  geom_vline(data=dt, aes(xintercept=years_of_experience.mean),linetype="dashed", size=1, colour="red")+
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="number of workers", x=paste(yearsOfExperience,"years of experience"));
+  labs(y="number of workers", x="years of experience");
+
 
 ```
+<p> We can obsreve that workers concentrated their information on multiples of 5 and 10. </p>
+<p> Since the distribution is very skewed (to the right in this case), the average is not a good representation of the data. The alterantive in these cases is to look at the quartiles, which are shown in the boxplot below.</p>
+
+```{r boxplot, include=FALSE}
+title<- paste("Fig.2 - Boxplot of years of experience in computer programming");
+ggplot(dt,aes(y=years_of_experience, x=worker))+ geom_boxplot()+
+   stat_summary(fun.y=mean, fun.ymax=max, geom="point", shape=5, size=4)+
+  ggtitle(title) +
+   theme(plot.title = element_text(size = fontSize))+
+   labs(x="workers", y="years of experience");
+
+summary(dt$years_of_experience);
+```
 ## Actual analysis
+<p> Bloxplot shows that half of the data points are bewlo 5 years of experience. 25% are between 5 and 10 years of experience. </p>
+
+
+<p> Therefore, in order to investigate the distribute of years of experience across questions, I selected the following four intervals: from 1 to 5 years of experince
 ```{r analysis, echo=FALSE}
 
 #Should I look for meaningful clusters?
 
 
-#Compute distribution for years of experience below 5.
+#Compute distribution of years of experience below 5.
 
 fontSize<-12;
 
