@@ -35,18 +35,18 @@ dataf =loadAnswers();
 #summary(dataf$Worker.yearsOfExperience)
 
 ##function to count the number of YoE entries that fall within start (inclusive) and end (exclusive)
-countScoreLevel<- function(startYear, endYear){
-  subset_df <-subset(dataf,select= c(Worker.score));
+countYoE<- function(dataf, startYear, endYear){
+  subset_df <-subset(dataf,select=c(Worker.yearsOfExperience));
   subset_df <- data.frame(subset_df); 
   
-  scoreCount<- rowSums(subset_df==level);
-  subset_df["scoreCount"] <- scoreCount;
+  yearCount<- rowSums(subset_df>=startYear & subset_df<endYear);
+  subset_df["yearCount"] <- yearCount;
   subset_df["Question.ID"] <- dataf$Question.ID;
 
-  subset_df <-subset(subset_df,select= c(Question.ID,scoreCount));
+  subset_df <-subset(subset_df,select= c(Question.ID,yearCount));
   question_by <- group_by(subset_df,Question.ID);
-  summaryTable <- summarize(question_by,sum(scoreCount));
-  colnames(summaryTable)<-c("QuestoinID","scoreCount");
+  summaryTable <- summarize(question_by,sum(yearCount));
+  colnames(summaryTable)<-c("QuestoinID","yearCount");
  
   return(summaryTable);
 }
@@ -56,7 +56,7 @@ listWorkerYoE<- function(dataf){
   workerYoE_vector<-{};
   #colnames(workersYoE_vec)<-c("WorkerID","YoE");
   size<-length(dataf$Worker.ID);
-  for(i in 1:2529){
+  for(i in 1:size){
     workerYoE_vector[dataf$Worker.ID[i]]<-dataf$Worker.yearsOfExperience[i];
   }
   
@@ -95,6 +95,8 @@ ggplot(dt,aes(x=years_of_experience))+
 <p> Since the distribution is very skewed (to the right in this case), the average is not a good representation of the data. The alterantive in these cases is to look at the quartiles, which are shown in the boxplot below.</p>
 
 ```{r boxplot, include=FALSE}
+
+fontSize<-12;
 title<- paste("Fig.2 - Boxplot of years of experience in computer programming");
 ggplot(dt,aes(y=years_of_experience, x=worker))+ geom_boxplot()+
    stat_summary(fun.y=mean, fun.ymax=max, geom="point", shape=5, size=4)+
@@ -108,61 +110,57 @@ summary(dt$years_of_experience);
 <p> Bloxplot shows that half of the data points are bewlo 5 years of experience. 25% are between 5 and 10 years of experience. </p>
 
 
-<p> Therefore, in order to investigate the distribute of years of experience across questions, I selected the following four intervals: from 1 to 5 years of experince
+<p> Therefore, in order to investigate the distribute of years of experience across questions, I selected the following four intervals: below 2 years, from 2 to 5 years, from 5 to 10, and above 10 years of experience.</p>
+
+
+
 ```{r analysis, echo=FALSE}
-
-#Should I look for meaningful clusters?
-
 
 #Compute distribution of years of experience below 5.
 
-fontSize<-12;
 
-yearsOfExperience<-"Professional_Developer";
-dt<-countItem(dataf,yearsOfExperience);
-title<- paste("Fig.1 - Distribution of ",yearsOfExperience," workers across questions");
-p1<- ggplot(dt,aes(x=itemCount))+
+fontSize<-10;
+
+startYear<-0;
+endYear<-2;
+dt<-countYoE(dataf,startYear,endYear);
+title<- paste("Fig.1 - Years of experience between ",startYear," and ", endYear);
+p1<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(yearsOfExperience," workers per question"));
+  labs(y="question count", x="years of experience");
 
-yearsOfExperience<-"Graduate_Student";
-dt<-countItem(dataf,yearsOfExperience);
-title<- paste("Fig.2 - Distribution of ",yearsOfExperience," workers across questions");
-p2<- ggplot(dt,aes(x=itemCount))+
+startYear<-2;
+endYear<-5;
+dt<-countYoE(dataf,startYear,endYear);
+title<- paste("Fig.2 - Years of experience between ",startYear," and ", endYear);
+p2<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(yearsOfExperience," workers per question"));
+  labs(y="question count", x="years of experience");
 
-yearsOfExperience<-"Hobbyist";
-dt<-countItem(dataf,yearsOfExperience);
-title<- paste("Fig.3 - Distribution of ",yearsOfExperience," workers across questions");
-p3<- ggplot(dt,aes(x=itemCount))+
+startYear<-5;
+endYear<-10;
+dt<-countYoE(dataf,startYear,endYear);
+title<- paste("Fig.3 - Years of experience between ",startYear," and ", endYear);
+p3<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(yearsOfExperience," workers per question"));
+  labs(y="question count", x="years of experience");
 
-yearsOfExperience<-"Undergraduate_Student";
-dt<-countItem(dataf,yearsOfExperience);
-title<- paste("Fig.4 - Distribution of ",yearsOfExperience," workers across questions");
-p4<- ggplot(dt,aes(x=itemCount))+
+startYear<-10;
+endYear<-51;
+dt<-countYoE(dataf,startYear,endYear);
+title<- paste("Fig.4 - Years of experience between ",startYear," and ", endYear);
+p4<-ggplot(dt,aes(x=yearCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(yearsOfExperience," workers per question"));
+  labs(y="question count", x="years of experience");
 
-yearsOfExperience<-"Other";
-dt<-countItem(dataf,yearsOfExperience);
-title<- paste("Fig.5 - Distribution of ",yearsOfExperience," workers across questions");
-p5<- ggplot(dt,aes(x=itemCount))+
-  geom_histogram(binwidth = 0.2) +
-  ggtitle(title) +
-  theme(plot.title = element_text(size = 12))+
-  labs(y="question count", x=paste(yearsOfExperience," workers per question"));
-
-multiplot(p1,p2,p3,p4,p5,cols=2)
+multiplot(p1,p2,p3,p4,cols=2)
 
 ```

@@ -21,13 +21,13 @@ loadAnswers<- function(){
   dataf <- dataf [!dataf$Worker.age <18,] ##minimum age to participate
   
   #Remove people with no experience in programming
-  dataf <- dataf [!dataf$Worker.yearsOfExperience ==0,]
+#  dataf <- dataf [!dataf$Worker.yearsOfExperience ==0,]
   
   #Remove people whose age doesn´t macht with experience 
   dataf <- dataf [!(dataf$Worker.age - dataf$Worker.yearsOfExperience) <5,]
   
   #Remove outliers
-  dataf <- dataf [!dataf$Worker.yearsOfExperience >40,]
+  dataf <- dataf [!dataf$Worker.yearsOfExperience >50,]
   dataf <- dataf [!dataf$Worker.age >80,]
   
   #summary (dataf);
