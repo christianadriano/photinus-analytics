@@ -1,0 +1,187 @@
+---
+title: "Accuracy by Difficulty Levels"
+author: "Christian Medeiros Adriano"
+date: "June 2, 2017"
+output: html_document
+---
+
+### Analysis of answer accuracy by the difficulty level of questions
+<p>Are workers more accurate in their answers when they consider questions less difficult?</p>
+
+```{r setup, echo=FALSE}
+#Setup
+
+library("ggplot2");
+
+loadAnswers<- function(fileName){
+  
+  setwd("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//correlationGraphs//");
+  data_all <- read.csv(fileName,header = TRUE,sep=",");
+  dataf = data.frame(data_all);
+  return(dataf);
+}
+
+dataf<- loadAnswers("answerList_photinus_data.csv");
+#Check if total answers is 2580
+length(dataf$TP)
+
+
+
+
+#Select TP, TN, FP, FN for the item
+selectOutcomes <- function(df,lineNumbers){
+  dataf_difficulty <- df [(lineNumbers) ,];
+  TP <- sum(dataf_difficulty$TP);
+  TN <- sum(dataf_difficulty$TN);
+  FP <- sum(dataf_difficulty$FP);
+  FN <- sum(dataf_difficulty$FN);
+  outcome.df <- data.frame(TP,TN,FP,FN);
+  return (outcome.df);
+}
+
+#Compute accuracy 
+computeAccuracy<- function(df){
+  return((df$TP+df$TN)/(df$TP+df$TN+df$FP+df$FN));
+}
+
+#Compute precision
+computePrecision<- function(df){
+  result<-(df$TP)/(df$TP+df$FP);
+  if(is.nan(sum(result))){
+    index<- is.nan(result);
+    result[index]<-0;
+  }
+  return(result);
+}
+
+#Compute recall
+computeRecall<- function(df){
+  return((df$TP)/(df$TP+df$FN));
+}
+
+## Computes a table with statistics each level of difficulty
+computeStats<- function(df,selection, filterName){
+  
+  dataframe <- data.frame(Difficulty=double(),Accuracy=double(), Precision=double(), Recall=double(), Answers=double() );
+  
+  for(i in 1:5){
+    outcomesDF<- selectOutcomes(df,selection==i);
+    dataframe[i,1]<-i;
+    dataframe[i,2]<-computeAccuracy(outcomesDF);
+    dataframe[i,3]<-computePrecision(outcomesDF);
+    dataframe[i,4]<-computeRecall(outcomesDF);
+    dataframe[i,5]<-sum(outcomesDF[1,]);
+  }
+  print(filterName);
+  print(dataframe);
+  message("Total answers:" , sum(dataframe$Answers));
+  
+  return(dataframe);
+}
+
+## Builds plots with multiple lines
+plotMultiLine <- function(stats,title){
+  
+  multiplot <- ggplot(stats, aes(x=Difficulty),fill="Metrics") +
+    geom_line(aes(y = Accuracy, colour="Accuracy")) + 
+    geom_line(aes(y = Recall, colour = "Recall")) +
+    geom_line(aes(y = Precision, colour = "Precision")) +
+    ggtitle(title) +
+    ylab(label="Metrics") + 
+    xlab("difficulty") +
+    scale_colour_manual("", 
+                        breaks = c("Accuracy" ,"Recall","Precision"),
+                        values = c("Accuracy"="blue","Recall"="black","Precision"="red"))+
+    scale_y_continuous(limits = c(0, 1));
+  
+  return(multiplot);
+}
+
+plotSingleLine <- function(stats,title){
+  
+  singlePlot <- ggplot(stats, aes(x=Difficulty),fill="Metrics") +
+    geom_line(aes(y = Accuracy, colour="Accuracy")) + 
+    ggtitle(title) +
+    ylab(label="Metrics") + 
+    xlab("difficulty") +
+    scale_colour_manual("", 
+                        breaks = c("Accuracy"),
+                        values = c("Accuracy"="blue"))+
+    scale_y_continuous(limits = c(0, 1));
+  return(singlePlot);
+}
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  library(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
+
+```
+
+## How do the accuracy of answers options (YES,NO) relate with the difficulty level of the questions?
+
+```{r pressure, echo=FALSE}
+################################################################################
+##### Analysis by Answer option (YES, NO)
+
+## ALL answers
+stats1<- computeStats(dataf,dataf$Answer.difficulty,"All Answers - difficulty");
+
+## Only YES's
+dataYES <- dataf [(dataf$Answer.option=="YES") ,];
+stats2<- computeStats(dataYES,dataYES$Answer.difficulty,"Only YES Answers - difficulty");
+
+## Only NO's
+dataNO <- dataf [(dataf$Answer.option=="NO") ,];
+stats3<- computeStats(dataNO,dataNO$Answer.difficulty,"Only NO Answers - difficulty");
+
+#Plotting
+# breaks =c("Accuracy" ,"Recall","Precision")
+p1<- plotMultiLine(stats1,"All answers");
+p2<- plotSingleLine(stats2,"Only Yes answers");
+p3<- plotSingleLine(stats3,"Only No answers");
+multiplot(p1, p2, p3, cols=2);
+```
+
+For all metrics, answer accuracy is negatively proportionate to difficulty level (need to confirm that by computing correlation).

@@ -2,6 +2,11 @@
 # Compute correlation among difficulty and accuracy
 #
 
+#Setup
+install.packages("ggplot2");
+library("ggplot2");
+source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//correlationGraphs//multiplot.R");
+
 loadAnswers<- function(fileName){
   
   setwd("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//correlationGraphs//");
@@ -68,24 +73,6 @@ computeStats<- function(df,selection, filterName){
   return(dataframe);
 }
 
-
-## ALL answers
-stats1<- computeStats(dataf,dataf$Answer.difficulty,"All Answers - difficulty");
-
-#### ANSWER OPTION
-## Only YES's
-dataYES <- dataf [(dataf$Answer.option=="YES") ,];
-stats2<- computeStats(dataYES,dataYES$Answer.difficulty,"Only YES Answers - difficulty");
-
-## Only NO's
-dataNO <- dataf [(dataf$Answer.option=="NO") ,];
-stats3<- computeStats(dataNO,dataNO$Answer.difficulty,"Only NO Answers - difficulty");
-
-#Plotting Answer Options
-install.packages("ggplot2");
-library("ggplot2");
-source("C://Users//chris//OneDrive//Documentos//GitHub//photinus-analytics//correlationGraphs//multiplot.R");
-
 ## Builds plots with multiple lines
 plotMultiLine <- function(stats,title){
   
@@ -118,6 +105,21 @@ plotSingleLine <- function(stats,title){
   return(singlePlot);
 }
 
+################################################################################
+##### Analysis by Answer option (YES, NO)
+
+## ALL answers
+stats1<- computeStats(dataf,dataf$Answer.difficulty,"All Answers - difficulty");
+
+## Only YES's
+dataYES <- dataf [(dataf$Answer.option=="YES") ,];
+stats2<- computeStats(dataYES,dataYES$Answer.difficulty,"Only YES Answers - difficulty");
+
+## Only NO's
+dataNO <- dataf [(dataf$Answer.option=="NO") ,];
+stats3<- computeStats(dataNO,dataNO$Answer.difficulty,"Only NO Answers - difficulty");
+
+#Plotting
 # breaks =c("Accuracy" ,"Recall","Precision")
 p1<- plotMultiLine(stats1,"All answers");
 p2<- plotSingleLine(stats2,"Only Yes answers");
