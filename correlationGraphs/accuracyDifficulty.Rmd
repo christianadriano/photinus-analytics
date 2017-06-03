@@ -5,7 +5,7 @@ date: "June 2, 2017"
 output: html_document
 ---
 
-### Analysis of answer accuracy by the difficulty level of questions
+<h2> Analysis of answer accuracy by the difficulty level of questions</h2>
 <p>Are workers more accurate in their answers when they consider questions less difficult?</p>
 
 ```{r setup, echo=FALSE}
@@ -23,10 +23,7 @@ loadAnswers<- function(fileName){
 
 dataf<- loadAnswers("answerList_photinus_data.csv");
 #Check if total answers is 2580
-length(dataf$TP)
-
-
-
+#length(dataf$TP)
 
 #Select TP, TN, FP, FN for the item
 selectOutcomes <- function(df,lineNumbers){
@@ -159,9 +156,9 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 ```
 
-## How do the accuracy of answers options (YES,NO) relate with the difficulty level of the questions?
+<h2> How do the accuracy of answers options (YES,NO) relate with the difficulty level of the questions?</h2>
 
-```{r pressure, echo=FALSE}
+```{r answerOption, echo=FALSE}
 ################################################################################
 ##### Analysis by Answer option (YES, NO)
 
@@ -184,4 +181,41 @@ p3<- plotSingleLine(stats3,"Only No answers");
 multiplot(p1, p2, p3, cols=2);
 ```
 
-For all metrics, answer accuracy is negatively proportionate to difficulty level (need to confirm that by computing correlation).
+<p>For all metrics, answer accuracy is negatively proportionate to difficulty level (need to confirm that by computing correlation). </p>
+
+<h2>How do the accuracy of answers by worker profession relate with the difficulty level of the questions? </h2>
+
+```{r answerbyProfession, echo=FALSE}
+################################################################################
+
+#### WORKER PROFESSION
+## Only PROFESSIONAL_DEVELOPERS
+dataProf <- dataf [(dataf$Worker.profession=="Professional_Developer") ,];
+stats1<- computeStats(dataProf,dataProf$Answer.difficulty,"Only PROFESSIONAL_DEVELOPERS - difficulty");
+
+## Only HOBBYIST´S
+dataProf <- dataf [(dataf$Worker.profession=="Hobbyist") ,];
+stats2<- computeStats(dataProf,dataProf$Answer.difficulty,"Only HOBBYIST - difficulty");
+
+## Only GRADUATE_STUDENT´S
+dataProf <- dataf [(dataf$Worker.profession=="Graduate_Student") ,];
+stats3<- computeStats(dataProf,dataProf$Answer.difficulty,"Only GRADUATE_STUDENT - difficulty");
+
+## Only Hobbyist´S
+dataProf <- dataf [(dataf$Worker.profession=="Hobbyist") ,];
+stats4<- computeStats(dataProf,dataProf$Answer.difficulty,"Only Hobbyist - difficulty");
+
+## Only OTHER´S
+dataProf <- dataf [(dataf$Worker.profession=="Other") ,];
+stats5<- computeStats(dataProf,dataProf$Answer.difficulty,"Only OTHER - difficulty");
+
+# breaks =c("Accuracy" ,"Recall","Precision")
+p1<- plotMultiLine(stats1,"Professional Developers");
+p2<- plotMultiLine(stats2,"Hobbyists");
+p3<- plotMultiLine(stats3,"Graduate students");
+p4<- plotMultiLine(stats4,"Undergraduate students");
+p5<- plotMultiLine(stats5,"Others");
+multiplot(p1, p2, p3, p4, p5, cols=3);
+```
+
+<p> As the charts above show, even across professions accuracy and difficulty follows are inversely proportionate.</p>
