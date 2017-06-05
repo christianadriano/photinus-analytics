@@ -215,7 +215,7 @@ p2<- plotMultiLine(stats2,"Hobbyists");
 p3<- plotMultiLine(stats3,"Graduate students");
 p4<- plotMultiLine(stats4,"Undergraduate students");
 p5<- plotMultiLine(stats5,"Others");
-multiplot(p1, p2, p3, p4, p5, cols=3);
+multiplot(p1, p2, p3, p4, p5, cols=2);
 ```
 
 <p> As the charts above show, even across professions accuracy and difficulty follows are inversely proportionate.</p>
@@ -257,7 +257,7 @@ p6<- plotSingleLine(stats6,"HIT06_51");
 p8<- plotSingleLine(stats8,"HIT08_54");
 p4<- plotSingleLine(stats4,"HIT04_7");
 
-multiplot(p2, p5, p7, p1,cols=4);
+multiplot(p2, p5, p7, p1,cols=2);
 
-multiplot(p3, p6, p8, p4, cols=4);
+multiplot(p3, p6, p8, p4, cols=2);
 ```
