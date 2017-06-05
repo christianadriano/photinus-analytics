@@ -246,9 +246,9 @@ p6<- plotSingleLine(stats6,"HIT06_51");
 p8<- plotSingleLine(stats8,"HIT08_54");
 p4<- plotSingleLine(stats4,"HIT04_7");
 
-multiplot(p2, p5, p7, p1,cols=4);
+multiplot(p2, p5, p7, p1,cols=2);
 
-multiplot(p3, p6, p8, p4, cols=4);
+multiplot(p3, p6, p8, p4, cols=2);
 
 ################################################################################
 # Java METHOD and UNDERGRADS
