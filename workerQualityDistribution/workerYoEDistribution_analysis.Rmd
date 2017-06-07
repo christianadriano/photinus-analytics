@@ -164,4 +164,4 @@ multiplot(p1,p2,p3,p4,cols=2)
 
 ```
 
-<p> As we can see, distributions are not uniform across questions. This suggests that some questions might have been overlooked by having been answered by less experienced workers. As in the case of Figures 2, 3 and 4, some questions can have almost 5 times more experience workers than other questions. </p>
+<p> As we can see, workers are not equally distributed across questions. This suggests that some questions might have been overlooked by having been answered by less experienced workers. As in the case of Figures 2, 3 and 4, some questions can have almost 5 times more experience workers than other questions. </p>
