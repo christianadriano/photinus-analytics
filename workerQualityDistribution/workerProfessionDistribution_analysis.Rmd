@@ -103,6 +103,6 @@ multiplot(p1,p2,p3,p4,p5,cols=2)
 
 ```
 
-<p>Charts show that workers are not uniformly distributed across questions, for instance, up to 10 questions received 7 out of 20 answers from undergraduate students (Fig.4). Since undergraduates have the lowest level of answer accuracy, these questions might have been overlooked. </p>
+<p>Charts show that workers are not equally distributed across questions, for instance, up to 10 questions received 7 out of 20 answers from undergraduate students (Fig.4). Workers seem rather normally distributed. Since undergraduates have the lowest level of answer accuracy, these questions might have been overlooked. </p>
 
 <p>While filtering workers by profession, I will have to bear this bias in mind. One way to cope with it is to run a Monte Carlo simulation on top of filtering. This way, I can minimize the effect of the existing bias on the population.</p>
