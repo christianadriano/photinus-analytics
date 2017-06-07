@@ -96,11 +96,11 @@ wilcox.test(tableScore_5$scoreCount,tableScore_4$scoreCount,alternative = c("two
 <br>In all test, the null-hypothesis was rejected, which implies that the three data sets have different averages 
 considering a confidence interval of 98.3%.
 
-The previous analysis show that workers are not uniformly distributed in
+The previous analysis show that workers are not equally distributed in
 terms of test score. This might be an issue because questions that 
 were answered by workers with lower score, might have been overlooked.
 
-However, on average, worker score might still be more uniformly distributed
+However, on average, worker score might still be more equally distributed
 across questions. This is what I will investigate next.
 
 ```{r, echo=FALSE}
@@ -160,7 +160,7 @@ cat("Probability of average score above 4=", round((1-pnorm(z))*100,2),"%");
 ```
 
 ###Conclusion
-Although workers are not uniformly distributed in terms of score, the average worker score per 
+Although workers are not equally distributed in terms of score, the average worker score per 
 question follows a normal distribution, which allows to infer that on average 90% of questions received workers with score above 4. Since the maximum score is 5, this represents a small variation across questions.
 
 
