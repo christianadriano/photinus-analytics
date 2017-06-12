@@ -63,22 +63,29 @@ wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative
 #Wilcox non-parametric test could not show that the average number of answers from professional developers are distinct in the two data sets.
 #Howver, we should be cautions that the lack of evidence of an effect is not proof that of lack of effect.
 
+############################################################################
 ### All non-students answers
 
 students<- dataf[!(dataf$Worker.profession %in% c("Professional_Developer","Hobbyist")),];
 non_students<- dataf[(dataf$Worker.profession %in% c("Professional_Developer","Hobbyist")),];
 
-students<-countItem(students,"");
-non_students<-countItem(non_students,"");
+students<-countItem(students,""); 
 
-shapiro.test(students$itemCount); #Normal W = 0.94139, p-value = 2.807e-05
-shapiro.test(non_students$itemCount); #Not normal W = 0.95102, p-value = 0.0001447
+bugCoveringList<- students[(students$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- students[!(students$QuestionID %in% bugCoveringID),];
 
-wilcox.test(students$itemCount,non_students$itemCount, alternative= "two.sided", paired=FALSE);
-#data: students$itemCount and non_students$itemCount
-#W = 1294.5, p-value < 2.2e-16 OPS!
+shapiro.test(bugCoveringList$itemCount); #Not Normal W = 0.88698, p-value = 0.009657
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.94791, p-value = 0.0004565
 
-#Wilcox non-parametric test showed that the average number of answers from students and non-students 
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1100.5, p-value = 0.2291
+
+#Wilcox non-parametric test could not show that the average number of answers from professional developers are distinct in the two data sets.
+#Howver, we should be cautions that the lack of evidence of an effect is not proof that of lack of effect.
+
+############################################################################
 
 ### non-students score = 100% (Professional_Developers, Hobbyists, and Others)
 
