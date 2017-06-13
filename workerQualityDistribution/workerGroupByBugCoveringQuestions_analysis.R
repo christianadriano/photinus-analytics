@@ -283,25 +283,27 @@ wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative
 #outcome of this filter cannot be un For this reason, we cannot 
 
 ##############################################
-### FILTER OUT students scored =60% 
+### FILTER OUT (all students) && (non-students below 60%)
+##leave only non-students with score 100% and 80%
 #OK, filter does not cause bias
 
-filteredStudents<- dataf[!((dataf$Worker.profession %in% c("Graduate_Student","Undergraduate_Student")) & dataf$Worker.score==3),];
 
-filteredStudents<-countItem(filteredStudents,""); 
+non_student_100_80<- dataf[((dataf$Worker.profession %in% c("Professional_Developer","Hobbyist","Other")) & dataf$Worker.score %in% c(4,5)),];
 
-bugCoveringList<- filteredStudents[(filteredStudents$QuestionID %in% bugCoveringID),];
-not_bugCoveringList<- filteredStudents[!(filteredStudents$QuestionID %in% bugCoveringID),];
+non_student_100_80<-countItem(non_student_100_80,""); 
 
-shapiro.test(bugCoveringList$itemCount); #Normal W = 0.92527, p-value = 0.06762
-shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.93354, p-value = 5.723e-05
+bugCoveringList<- non_student_100_80[(non_student_100_80$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- non_student_100_80[!(non_student_100_80$QuestionID %in% bugCoveringID),];
 
-mean(bugCoveringList$itemCount) #17.4
-mean(not_bugCoveringList$itemCount) #17.6
+shapiro.test(bugCoveringList$itemCount); #Normal W = 0.93489, p-value = 0.1128
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.96072, p-value = 0.003591
+
+mean(bugCoveringList$itemCount) #11.28
+mean(not_bugCoveringList$itemCount) #10.49
 
 wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
 #data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
-#W = 1173.5, p-value = 0.4415
+#W = 1547, p-value = 0.1384
 
 #Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
 
