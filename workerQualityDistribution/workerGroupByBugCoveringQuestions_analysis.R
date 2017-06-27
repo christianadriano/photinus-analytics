@@ -307,6 +307,16 @@ wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative
 
 #Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
 
+##########################################################################
+####### SCORE and DIFFICULTY
+##########################################################################
+
 ### least difficult answers by worker score
+
+#Evaluate filtering by each worker score separately. Filtering by difficulty levels doesn't insert bias because difficulty 
+#is not an independent variable such as workers. Independent variables could be randomly allocated, while dependent variables cannot
+#be randomly allocated. The assumption is that successive experiments with workers randomly allocated to tasks might present 
+#concentration of more skilled workers on certain questions. However, difficulty levels attributed to question will not 
+#vary across workers with different levels of expertise. In anyway, we still tested this filter with respect to bias.
 
 
