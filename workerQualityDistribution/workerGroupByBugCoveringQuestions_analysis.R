@@ -11,6 +11,7 @@ bugCoveringID<- c(1,4,10,14,20,23,30,32,55,56,57,58,59,72,73,77,84,92,95,97,102,
 dataf =loadAnswers();
 
 ##function to count the numer of workers with profession X for each question
+#Add two columns to the data that is passed (QuestionID, itemCount)
 countItem<- function(dataf, profession){
   subset_df <-subset(dataf,select= c(Worker.profession)); ##extract only the column Worker.profession)
   subset_df <- data.frame(subset_df); 
@@ -321,42 +322,41 @@ wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative
 
 #Filter OUT student with 60% score
 
-### non-students score = 100% 80% (Professional_Developers, Hobbyists, and Others)
-non_students<- dataf[(dataf$Worker.profession %in% c("Professional_Developer","Hobbyist","Other")),];
-non_students<- non_students[(non_students$Worker.score %in% c(4,5)),];
+removedStudent_60<- dataf[!((dataf$Worker.profession %in% c("Graduate_Student","Undergraduate_Student")) & dataf$Worker.score %in% c(3)),];
 
-non_students<-countItem(non_students,""); 
+#Counts the number of occurrences of each questions in the dataset.
+removedStudent_60<-countItem(removedStudent_60,""); 
 
-bugCoveringList<- non_students[(non_students$QuestionID %in% bugCoveringID),];
-not_bugCoveringList<- non_students[!(non_students$QuestionID %in% bugCoveringID),];
+bugCoveringList<- removedStudent_60[(removedStudent_60$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- removedStudent_60[!(removedStudent_60$QuestionID %in% bugCoveringID),];
 
-shapiro.test(bugCoveringList$itemCount); #Normal W = 0.95015, p-value = 0.2527
-shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.96348, p-value = 0.005757
+shapiro.test(bugCoveringList$itemCount); #Normal W = 0.92527, p-value = 0.06762
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.93354, p-value = 5.723e-05
 
 mean(bugCoveringList$itemCount)
-#7.36
+#17.4
 mean(not_bugCoveringList$itemCount)
-#6.27
+#17.63
 
 wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
 #data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
-#W = 1715, p-value = 0.01214
+#W = 1173.5, p-value = 0.4415
 #alternative hypothesis: true location shift is not equal to 0
 #95 percent confidence interval:
-#  3.068510e-06 1.999979e+00
-#sample estimates difference in location = 1.000018 
+#  -0.9999826279  0.0000290348
+#sample estimates difference in location = -2.867395e-05 
 
-#Wilcox non-parametric test SHOWED that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
-#Moreover, bug-covering received more answers in average. This unbalance implies that we cannot trust that the filter is actually fair, therefore the 
-#outcome of this filter cannot be un For this reason, we canno
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and 
+#non-bug covering are distinct with a 95% confidence interval.
 
 ##############################################
 ### FILTER OUT (all students) && (non-students below 60%)
 ##leave only non-students with score 100% and 80%
 #OK, filter does not cause bias
 
+non_students<- dataf[!(dataf$Worker.profession %in% c("Graduate_Student","Undergraduate_Student")),]
 
-non_student_100_80<- dataf[((dataf$Worker.profession %in% c("Professional_Developer","Hobbyist","Other")) & dataf$Worker.score %in% c(4,5)),];
+non_student_100_80<- non_students[(non_students$Worker.score %in% c(4,5)),];
 
 non_student_100_80<-countItem(non_student_100_80,""); 
 
