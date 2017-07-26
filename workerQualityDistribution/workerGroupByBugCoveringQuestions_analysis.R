@@ -387,4 +387,201 @@ wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative
 #concentration of more skilled workers on certain questions. However, difficulty levels attributed to question will not 
 #vary across workers with different levels of expertise. In anyway, we still tested this filter with respect to bias.
 
+##############################################
+### FILTER OUT ([difficulty 5] and [all scores])
+#OK, filter does not cause bias
 
+filteredSet<- dataf[!(dataf$Answer.difficulty %in% c(5)),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #Not normal W = 0.79116, p-value = 0.0001625
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.95419, p-value = 0.001221
+
+mean(bugCoveringList$itemCount) #16.4
+mean(not_bugCoveringList$itemCount) #17.02885
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1088, p-value = 0.2009
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
+
+#######################################################
+### FILTER OUT ([difficulty 5] and [scores 80% 60%])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5)) & (dataf$Worker.score %in% c(4,3))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #Not normal W = 0.77357, p-value = 8.501e-05
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.91952, p-value = 9.219e-06
+
+mean(bugCoveringList$itemCount) #17.92
+mean(not_bugCoveringList$itemCount) #18.06731
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1228, p-value = 0.6628
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
+
+#######################################################
+### FILTER OUT ([difficulty 5] and [scores 80%]) U ([difficulty 5,4] and [scores 60%])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5)) & (dataf$Worker.score %in% c(4))),]
+
+filteredSet<- filteredSet[!((filteredSet$Answer.difficulty %in% c(5,4)) & (filteredSet$Worker.score %in% c(3))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #Not normal W = 0.92785, p-value = 0.07752
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.95128, p-value = 0.0007699
+
+mean(bugCoveringList$itemCount) #16.76
+mean(not_bugCoveringList$itemCount) #16.78846
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1268, p-value = 0.8492
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
+
+#######################################################
+### FILTER OUT ([difficulty 5,4] and [scores 80%,60%])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5,4)) & (dataf$Worker.score %in% c(4,3))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #Not normal W = 0.94615, p-value = 0.205
+shapiro.test(not_bugCoveringList$itemCount); #Not normal W = 0.97251, p-value = 0.02903
+
+mean(bugCoveringList$itemCount) #15.48
+mean(not_bugCoveringList$itemCount) #15.47115
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1286.5, p-value = 0.9377
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct with a 95% confidence interval.
+
+################################################################
+## DIFFICULTY and PROFESSION
+################################################################
+
+#######################################################
+### FILTER OUT ([difficulty 5,4,3] and [profession 80%,60%])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5,4,3)) & (dataf$Worker.profession %in% c("Professional_Programmer", "Hobbyist", "Other"))),]
+
+filteredSet<- filteredSet[!((filteredSet$Worker.profession %in% c("Graduate_Student", "Undergraduate_Student"))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #normal W = 0.94012, p-value = 0.149
+shapiro.test(not_bugCoveringList$itemCount); # normal W = 0.97652, p-value = 0.06127
+
+mean(bugCoveringList$itemCount) #9.52
+mean(not_bugCoveringList$itemCount) #9.605769
+
+t.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#t = -0.171, df = 35.051, p-value = 0.8652
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct
+#with a 95% confidence interval.
+
+#######################################################
+### FILTER OUT ([difficulty 5] and [profession Graduate_Student]) U( [difficulty 5,4] and [Undergrad])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5)) & (dataf$Worker.profession %in% c("Graduate_Student"))),]
+
+filteredSet<- filteredSet[!((filteredSet$Answer.difficulty %in% c(5,4)) & (filteredSet$Worker.profession %in% c("Undergraduate_Student"))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #NOT normal W = 0.78078, p-value = 0.0001105
+shapiro.test(not_bugCoveringList$itemCount); #NOT normal W = 0.89938, p-value = 8.781e-07
+
+mean(bugCoveringList$itemCount) #17.92
+mean(not_bugCoveringList$itemCount) #18.13462
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1170.5, p-value = 0.4286
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct
+#with a 95% confidence interval.
+
+
+#######################################################
+### FILTER OUT ([difficulty 5,4,3] and [profession Graduate_Student, Undergrad])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5,4,3)) & (dataf$Worker.profession %in% c("Graduate_Student","Undergraduate_Student"))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #normal W = 0.96139, p-value = 0.4428
+shapiro.test(not_bugCoveringList$itemCount); #NOT normal W = 0.92658, p-value = 2.262e-05
+
+mean(bugCoveringList$itemCount) #15.36
+mean(not_bugCoveringList$itemCount) #15.75
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1130, p-value = 0.3053
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct
+#with a 95% confidence interval.
+
+#######################################################
+### FILTER OUT ([difficulty 5,4] and [profession Graduate_Student, Undergrad])
+#OK, filter does not cause bias
+
+filteredSet<- dataf[!((dataf$Answer.difficulty %in% c(5,4)) & (dataf$Worker.profession %in% c("Graduate_Student","Undergraduate_Student"))),]
+
+filteredSet<-countItem(filteredSet,""); 
+
+bugCoveringList<- filteredSet[(filteredSet$QuestionID %in% bugCoveringID),];
+not_bugCoveringList<- filteredSet[!(filteredSet$QuestionID %in% bugCoveringID),];
+
+shapiro.test(bugCoveringList$itemCount); #NOT normalW = 0.84392, p-value = 0.001353
+shapiro.test(not_bugCoveringList$itemCount); #NOT normal W = 0.91797, p-value = 7.613e-06
+
+mean(bugCoveringList$itemCount) #17.32
+mean(not_bugCoveringList$itemCount) #17.52885
+
+wilcox.test(bugCoveringList$itemCount,not_bugCoveringList$itemCount, alternative= "two.sided", paired=FALSE, conf.int = TRUE);
+#data:  bugCoveringList$itemCount and not_bugCoveringList$itemCount
+#W = 1219.5, p-value = 0.6271
+
+#Wilcox non-parametric test COULD NOT SHOW that the average number of answers for bug covering and non-bug covering are distinct
+#with a 95% confidence interval.
