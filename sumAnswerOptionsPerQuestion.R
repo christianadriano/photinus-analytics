@@ -1,4 +1,8 @@
+
+
 library(dplyr);
+
+#Auxiliary functions
 
 ##by_questions<- group_by(subset_df,Question.ID) ;
 countAnswerOptions<- function(dataf){
@@ -39,13 +43,6 @@ computeThreshold<- function(summaryTable, threshold){
   return(summaryTable);
 }
 
-#Provides the list of questions that have to be considered 
-#and the list of questions that cover bugs
-computeRanking<- function(summaryTable,  questionList){
-  summaryTable["ThresholdVote"] <- summaryTable[,"Yes.count"]>threshold;
-  return(summaryTable);
-}
-
 #Add a column with the information of whether the question.ID 
 #covers a bug of not.
 appendGroundTruth<- function(summaryTable, questionList){
@@ -54,6 +51,23 @@ appendGroundTruth<- function(summaryTable, questionList){
   return(summaryTable);  
 }
 
+
+
+#Provides the list of questions that have to be considered 
+#and the list of questions that covers bugs
+computeRanking<- function(summaryTable,  questionRangeList){
+  summaryTable["ThresholdVote"] <- summaryTable[,"Yes.count"]>threshold;
+  return(summaryTable);
+}
+
+
+######## Main code
+
+# Import data
+source("C://Users//chris//OneDrive//Documentos//GitHub//randomForestWorkerConfidenceDifficulty//loadAnswers.R");
+dataf <- loadAnswers("answerList_data.csv");
+
+# Initialize Java method questions and bug covering data
 questionList <- c(1,4,10,14,20,23,30,32,55,56,57,58,59,72,73,77,84,92,95,97,102,104,115,119,123);
 JavaMethod1_questions <- c(1:9);
 JavaMethod2_questions <- c(10:15); 
@@ -63,4 +77,8 @@ JavaMethod5_questions <- c(70:78);
 JavaMethod6_questions <- c(79:96);
 JavaMethod7_questions <- c(97:104);
 JavaMethod8_questions <- c(105:128);
+
+summaryTable <- countAnswerOptions(dataf);
+summaryTable <- appendGroundTruth(summaryTable,questionList);
+
 
