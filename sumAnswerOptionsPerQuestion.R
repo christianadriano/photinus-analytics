@@ -38,8 +38,8 @@ computeMajorityVote<- function(summaryTable){
   return(summaryTable);
 }
 
-computeThreshold<- function(summaryTable, threshold){
-  summaryTable["ThresholdVote"] <- summaryTable[,"Yes.count"]>threshold;
+computeThresholdVote<- function(summaryTable, threshold){
+  summaryTable["ThresholdVote"] <- summaryTable[,"Yes.Count"]>threshold;
   return(summaryTable);
 }
 
@@ -56,10 +56,29 @@ appendGroundTruth<- function(summaryTable, questionList){
 #Provides the list of questions that have to be considered 
 #and the list of questions that covers bugs
 computeRanking<- function(summaryTable,  questionRangeList){
-  summaryTable["ThresholdVote"] <- summaryTable[,"Yes.count"]>threshold;
+  selection<- selectRows(summaryTable,JavaMethod1_questions); 
+  #Sort 
+  selection <- selection[with(selection,order(-Yes.Count)),];
+  #remove duplicates
+  uniqueLevels <- unique(selection$Yes.Count)
+  labelsMatrix<-matrix(NA,length(uniqueLevels),2);
+  
+  selectionSave<-selection;
+  
+  #x[x$Month %in% c("March", "April"), c("VAR2", "VAR3")] = NA
+  #label based on number of YES
+  selection[selection$Yes.Count %in% m[1,], m[2,]] = NA
+  
+
   return(summaryTable);
 }
 
+
+#Select only the rows that match the questionIDlist
+selectRows <-function(summaryTable,questionIDList){
+  selectedRows <- summaryTable[summaryTable$Question.ID %in% questionIDList,];
+  return(selectedRows);
+}
 
 ######## Main code
 
@@ -69,7 +88,7 @@ dataf <- loadAnswers("answerList_data.csv");
 
 # Initialize Java method questions and bug covering data
 questionList <- c(1,4,10,14,20,23,30,32,55,56,57,58,59,72,73,77,84,92,95,97,102,104,115,119,123);
-JavaMethod1_questions <- c(1:9);
+JavaMethod1_questions <- c(0:9);
 JavaMethod2_questions <- c(10:15); 
 JavaMethod3_questions <- c(16:32);
 JavaMethod4_questions <- c(33:69);
@@ -80,5 +99,7 @@ JavaMethod8_questions <- c(105:128);
 
 summaryTable <- countAnswerOptions(dataf);
 summaryTable <- appendGroundTruth(summaryTable,questionList);
+summaryTable <- computeMajorityVote(summaryTable);
+summaryTable <- computeThresholdVote(summaryTable,6);
 
 
