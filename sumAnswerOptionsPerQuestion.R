@@ -77,6 +77,7 @@ setRangeID<-function(summaryTable,id, range){
 #Provides the list of questions that have to be considered 
 #and the list of questions that covers bugs
 computeRanking<- function(summaryTable,  questionRangeList){
+ 
   selection<- selectRows(summaryTable,JavaMethod1_questions); 
   #Sort 
   selection <- selection[with(selection,order(-Yes.Count)),];
@@ -124,5 +125,5 @@ summaryTable <- appendGroundTruth(summaryTable,questionList);
 summaryTable<- setJavaMethodID(summaryTable);
 summaryTable <- computeMajorityVote(summaryTable);
 summaryTable <- computeThresholdVote(summaryTable,6);
-selection<- computeRanking(summaryTable,JavaMethod1_questions);
+selection<- computeRanking(summaryTable,javaMethod=1);
 
