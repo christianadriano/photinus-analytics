@@ -51,7 +51,28 @@ appendGroundTruth<- function(summaryTable, questionList){
   return(summaryTable);  
 }
 
+setJavaMethodID<- function(summaryTable){
+  
+  summaryTable<- setRangeID(summaryTable,1,c(0:9));
+  summaryTable<- setRangeID(summaryTable,2,c(10:15));
+  summaryTable<- setRangeID(summaryTable,3,c(16:32));
+  summaryTable<- setRangeID(summaryTable,4,c(33:69));
+  summaryTable<- setRangeID(summaryTable,5,c(70:78));
+  summaryTable<- setRangeID(summaryTable,6,c(79:96));
+  summaryTable<- setRangeID(summaryTable,7,c(97:104));
+  summaryTable<- setRangeID(summaryTable,8,c(105:128));
+  
+  return (summaryTable);
+}
 
+setRangeID<-function(summaryTable,id, range){
+  
+  for(i in 1:length(range)){
+    matchedRows <- which(summaryTable$Question.ID == range[i]);  
+    summaryTable[matchedRows,"JavaMethod"]<-id;
+  }
+  return(summaryTable);
+}
 
 #Provides the list of questions that have to be considered 
 #and the list of questions that covers bugs
@@ -61,18 +82,26 @@ computeRanking<- function(summaryTable,  questionRangeList){
   selection <- selection[with(selection,order(-Yes.Count)),];
   #remove duplicates
   uniqueLevels <- unique(selection$Yes.Count)
-  labelsMatrix<-matrix(NA,length(uniqueLevels),2);
+  labels<-matrix(NA,length(uniqueLevels),2);
   
-  selectionSave<-selection;
+  labels[,1]<- uniqueLevels;
+  labels[,2]<- c(1:length(uniqueLevels));
   
-  #x[x$Month %in% c("March", "April"), c("VAR2", "VAR3")] = NA
-  #label based on number of YES
-  selection[selection$Yes.Count %in% m[1,], m[2,]] = NA
-  
+  selection <- rankQuestions(selection,labels);
 
-  return(summaryTable);
+  return(selection);
 }
 
+
+rankQuestions <- function(selection, labels){
+  
+  for(i in 1:length(labels[,2])){
+    matchedRows <- which(selection$Yes.Count==labels[i,1]);  
+    selection[matchedRows,"ranking"]<-labels[i,2];
+  }
+  
+  return(selection);
+}
 
 #Select only the rows that match the questionIDlist
 selectRows <-function(summaryTable,questionIDList){
@@ -88,18 +117,12 @@ dataf <- loadAnswers("answerList_data.csv");
 
 # Initialize Java method questions and bug covering data
 questionList <- c(1,4,10,14,20,23,30,32,55,56,57,58,59,72,73,77,84,92,95,97,102,104,115,119,123);
-JavaMethod1_questions <- c(0:9);
-JavaMethod2_questions <- c(10:15); 
-JavaMethod3_questions <- c(16:32);
-JavaMethod4_questions <- c(33:69);
-JavaMethod5_questions <- c(70:78);
-JavaMethod6_questions <- c(79:96);
-JavaMethod7_questions <- c(97:104);
-JavaMethod8_questions <- c(105:128);
+
 
 summaryTable <- countAnswerOptions(dataf);
 summaryTable <- appendGroundTruth(summaryTable,questionList);
+summaryTable<- setJavaMethodID(summaryTable);
 summaryTable <- computeMajorityVote(summaryTable);
 summaryTable <- computeThresholdVote(summaryTable,6);
-
+selection<- computeRanking(summaryTable,JavaMethod1_questions);
 
