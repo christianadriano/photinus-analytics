@@ -76,21 +76,26 @@ setRangeID<-function(summaryTable,id, range){
 
 #Provides the list of questions that have to be considered 
 #and the list of questions that covers bugs
-computeRanking<- function(summaryTable,  questionRangeList){
- 
-  selection<- selectRows(summaryTable,JavaMethod1_questions); 
-  #Sort 
-  selection <- selection[with(selection,order(-Yes.Count)),];
-  #remove duplicates
-  uniqueLevels <- unique(selection$Yes.Count)
-  labels<-matrix(NA,length(uniqueLevels),2);
+computeRanking <- function(summaryTable){
   
-  labels[,1]<- uniqueLevels;
-  labels[,2]<- c(1:length(uniqueLevels));
+  for(i in 1:8){
+    selection <- summaryTable[summaryTable$JavaMethod==i,];
+    
+    #Sort 
+    selection <- selection[with(selection,order(-Yes.Count)),];
+    #remove duplicates
+    uniqueLevels <- unique(selection$Yes.Count)
+    labels<-matrix(NA,length(uniqueLevels),2);
+    
+    labels[,1]<- uniqueLevels;
+    labels[,2]<- c(1:length(uniqueLevels));
+    
+    selection <- rankQuestions(selection,labels);
+    
+    summaryTable[selection$Question.ID+1,"ranking"]<-selection$ranking; 
+  }
   
-  selection <- rankQuestions(selection,labels);
-
-  return(selection);
+  return(summaryTable);
 }
 
 
@@ -112,18 +117,76 @@ selectRows <-function(summaryTable,questionIDList){
 
 ######## Main code
 
-# Import data
-source("C://Users//chris//OneDrive//Documentos//GitHub//randomForestWorkerConfidenceDifficulty//loadAnswers.R");
-dataf <- loadAnswers("answerList_data.csv");
+runMain<-function(){
+  
+  # Import data
+  source("C://Users//chris//OneDrive//Documentos//GitHub//randomForestWorkerConfidenceDifficulty//loadAnswers.R");
+  dataf <- loadAnswers("answerList_data.csv");
+  
+  # Initialize Java method questions and bug covering data
+  questionList <- c(1,4,10,14,20,23,30,32,55,56,57,58,59,72,73,77,84,92,95,97,102,104,115,119,123);
+  
+  
+  summaryTable <- countAnswerOptions(dataf);
+  summaryTable <- appendGroundTruth(summaryTable,questionList);
+  summaryTable<- setJavaMethodID(summaryTable);
+  summaryTable <- computeMajorityVote(summaryTable);
+  summaryTable <- computeThresholdVote(summaryTable,6);
+  summaryTable<- computeRanking(summaryTable);
+  
+  return (summaryTable);
+}
 
-# Initialize Java method questions and bug covering data
-questionList <- c(1,4,10,14,20,23,30,32,55,56,57,58,59,72,73,77,84,92,95,97,102,104,115,119,123);
+##Run random forest
+install.packages('randomForest')
+library(randomForest)
+install.packages("rpart.plot")
+install.packages('rattle')
+install.packages('rpart.plot')
+install.packages('RColorBrewer')
+library(rpart)
+library(RColorBrewer)
+library(rattle)
+library(rpart.plot) 
 
 
-summaryTable <- countAnswerOptions(dataf);
-summaryTable <- appendGroundTruth(summaryTable,questionList);
-summaryTable<- setJavaMethodID(summaryTable);
-summaryTable <- computeMajorityVote(summaryTable);
-summaryTable <- computeThresholdVote(summaryTable,6);
-selection<- computeRanking(summaryTable,javaMethod=1);
+totalData = length(summaryTable$Question.ID);
+trainingSize = trunc(totalData * 0.7);
+startTestIndex = totalData - trainingSize;
+endTestIndex = totalData;
+
+model <- randomForest(as.factor(bugCovering) ~ ranking, 
+                      data = as.data.frame(summaryTable[1:trainingSize,]), 
+                      importance=TRUE, ntree=2000, type="class");
+varImpPlot(model);
+
+# Predict YES answers
+Prediction <- predict(model, test,'vote');
+submit <- data.frame(Question.ID = test$Question.ID, PredictedLevel = Prediction, Actual = test$bugCovering);
+write.csv(submit, file = "C://Users//chris//OneDrive//Documentos//GitHub//randomForestWorkerConfidenceDifficulty//firstforest_ranking.csv", row.names = FALSE);
+model$predicted
+model$confusion
+model$votes
+
+#---------------------------------------------------------------------
+
+library(party)
+
+# Decision Tree
+fit <- rpart(as.factor(bugCovering) ~ ranking, method="class",
+             data = as.data.frame(summaryTable));
+#              data = as.data.frame(summaryTable[1:trainingSize,]));
+
+
+printcp(fit);
+plotcp(fit);
+summary(fit);
+plot(fit)
+plot(fit, uniform=TRUE,main="Classification of bugCovering by ranking");
+text(fit, use.n = TRUE, all=TRUE, cex=1);
+#ranking higher than 2.5 implies non-bug. 
+#Interpret these results from summary
+#Run the decision tree for majority and threshold
+
+
 
