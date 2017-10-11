@@ -5,7 +5,8 @@ setwd("C://firefly//AnswerAnalysis//")
 sample <- read.csv("answerConfidence.csv",  header=T)
 summary(sample)
 
-plot(sample$confidence, sample$difficulty)
+hist(sample$confidence);
+hist(sample$difficulty);
 
 cor.test(sample$confidence, sample$difficulty, method="kendall")
 result$statistic
