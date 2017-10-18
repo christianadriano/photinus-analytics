@@ -55,7 +55,7 @@ fontSize<-12;
 
 profession<-"Professional_Developer";
 dt<-countItem(dataf,profession);
-title<- paste("Fig.1 - Distribution of ",profession," workers across questions");
+title<- paste("Fig.1 ",profession," across questions");
 p1<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
@@ -64,7 +64,7 @@ p1<- ggplot(dt,aes(x=itemCount))+
 
 profession<-"Graduate_Student";
 dt<-countItem(dataf,profession);
-title<- paste("Fig.2 - Distribution of ",profession," workers across questions");
+title<- paste("Fig.2 ",profession," across questions");
 p2<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
@@ -73,7 +73,7 @@ p2<- ggplot(dt,aes(x=itemCount))+
 
 profession<-"Hobbyist";
 dt<-countItem(dataf,profession);
-title<- paste("Fig.3 - Distribution of ",profession," workers across questions");
+title<- paste("Fig.3 ",profession," across questions");
 p3<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
@@ -82,7 +82,7 @@ p3<- ggplot(dt,aes(x=itemCount))+
 
 profession<-"Undergraduate_Student";
 dt<-countItem(dataf,profession);
-title<- paste("Fig.4 - Distribution of ",profession," workers across questions");
+title<- paste("Fig.4 ",profession," across questions");
 p4<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
@@ -91,7 +91,7 @@ p4<- ggplot(dt,aes(x=itemCount))+
 
 profession<-"Other";
 dt<-countItem(dataf,profession);
-title<- paste("Fig.5 - Distribution of ",profession," workers across questions");
+title<- paste("Fig.5 ",profession," across questions");
 p5<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
