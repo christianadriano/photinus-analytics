@@ -60,7 +60,7 @@ p1<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(profession," workers per question"));
+   labs(y="question count", x=paste("workers per question"));
 
 profession<-"Graduate_Student";
 dt<-countItem(dataf,profession);
@@ -69,7 +69,7 @@ p2<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(profession," workers per question"));
+   labs(y="question count", x=paste("workers per question"));
 
 profession<-"Hobbyist";
 dt<-countItem(dataf,profession);
@@ -78,7 +78,7 @@ p3<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(profession," workers per question"));
+  labs(y="question count", x=paste("workers per question"));
 
 profession<-"Undergraduate_Student";
 dt<-countItem(dataf,profession);
@@ -87,7 +87,7 @@ p4<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = fontSize))+
-  labs(y="question count", x=paste(profession," workers per question"));
+  labs(y="question count", x=paste("workers per question"));
 
 profession<-"Other";
 dt<-countItem(dataf,profession);
@@ -96,7 +96,7 @@ p5<- ggplot(dt,aes(x=itemCount))+
   geom_histogram(binwidth = 0.2) +
   ggtitle(title) +
   theme(plot.title = element_text(size = 12))+
-  labs(y="question count", x=paste(profession," workers per question"));
+  labs(y="question count", x=paste("workers per question"));
 
 
 multiplot(p1,p2,p3,p4,p5,cols=2)
