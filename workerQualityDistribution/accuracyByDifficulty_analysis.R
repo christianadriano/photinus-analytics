@@ -23,7 +23,7 @@ summaryTable <- countCorrectAnswerByDifficulty(data = dataf);
 
 #Normality tests 
 shapiro.test(summaryTable$Answer.difficulty); 
-#W = 0.98189, p-value = 0.9672 NORMAL
+#W = 0.98189, p-value = 0.9672  NORMAL
 qqnorm(y=summaryTable$Answer.difficulty);
 qqline(summaryTable$Answer.difficulty);
 #normal 

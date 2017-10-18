@@ -1,15 +1,16 @@
 
 #Is age correlated with accuracy of answers
+library(Hmisc);
 library(dplyr);
 
 countCorrectAnswerByYoE<-function(data){
-  subsetTPTN_df = subset(data,select= c(Worker.yearsOfExperience, TP, TN));
+  subsetTPTN_df = subset(dataf,select= c(Worker.yearsOfExperience, TP, TN));
   CorrectAnswers = subsetTPTN_df$TP + subsetTPTN_df$TN;
   subsetTPTN_df = data.frame(subsetTPTN_df);
   subsetTPTN_df["CorrectAnswers"]<-CorrectAnswers;
   
   by_questions = group_by(subsetTPTN_df,Worker.yearsOfExperience) ;
-  summaryTable = summarize(by_questions,sum(CorrectAnswers));
+  summaryTable = dplyr::summarize(by_questions,sum(CorrectAnswers));
   colnames(summaryTable) = c("Worker.yearsOfExperience","CorrectAnswers");
   
   return(summaryTable);
